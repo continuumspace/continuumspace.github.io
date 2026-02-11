@@ -5,19 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Continuum Space</title>
     <style>
-        /* 기존 스타일 유지 */
-        body { margin: 0; background-color: #3d2b1f; color: #f5f5f5; font-family: 'Pretendard', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        .container { text-align: center; animation: fadeIn 1.5s ease-out; display: none; } /* 처음엔 숨김 */
+        /* 기존 스타일 유지 및 스크롤 허용을 위한 수정 */
+        body { margin: 0; background-color: #3d2b1f; color: #f5f5f5; font-family: 'Pretendard', sans-serif; }
+        
+        /* 메인 컨테이너: 처음엔 투명하다가 스크롤 시 나타남 */
+        .container { 
+            text-align: center; 
+            display: none; 
+            position: fixed; 
+            top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 100%;
+            z-index: 10;
+        } 
+        
         h1 { font-size: 3.5rem; letter-spacing: -1px; margin-bottom: 10px; color: #6B8E23; }
         p { font-size: 1.5rem; color: #a4c639; margin-bottom: 30px; font-weight: bold; }
         .links a { text-decoration: none; color: #6B8E23; border: 2px solid #6B8E23; padding: 12px 25px; border-radius: 50px; transition: 0.3s; margin: 0 5px; font-weight: bold; cursor: pointer; display: inline-block; }
         .links a:hover { background: #6B8E23; color: #3d2b1f; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .content-section { display: none; margin-top: 30px; animation: fadeIn 0.5s ease-out; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -30%); } to { opacity: 1; transform: translate(-50%, -50%); } }
+
+        .content-section { display: none; margin-top: 30px; }
         .content-section.active { display: block; }
         .back-btn { margin-top: 20px; display: inline-block; color: #6B8E23; cursor: pointer; text-decoration: underline; font-weight: bold; }
 
-        /* --- 추가 내용: 인트로 화면 스타일 --- */
+        /* 인트로 화면 */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: #3d2b1f; display: flex; justify-content: center; align-items: center;
@@ -25,12 +38,26 @@
         }
         #intro-screen h2 { color: #6B8E23; font-size: 2rem; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        /* --- 추가된 스크롤 페이지 영역 --- */
+        #scroll-page {
+            display: none;
+            height: 250vh; /* 스크롤 길이를 충분히 확보 */
+            background: linear-gradient(to bottom, #3d2b1f, #2a1d15);
+            text-align: center;
+            padding-top: 20vh;
+        }
+        .scroll-guide { color: #6B8E23; font-size: 1.8rem; font-weight: bold; transition: opacity 0.5s; }
     </style>
 </head>
 <body>
-    <div id="intro-screen" onclick="enterSite()">
-        <h2>CLICK TO ENTER</h2>
-        <p style="font-size: 1rem; color: #6B8E23;">태윤이의 비밀공간으로 입장</p>
+    <div id="intro-screen" onclick="startScrollPage()">
+        <h2>TAP IN</h2>
+        <p style="font-size: 1rem; color: #6B8E23;">ENJOY</p>
+    </div>
+
+    <div id="scroll-page">
+        <div class="scroll-guide" id="guide-text">아래로 스크롤하여 비밀공간 열기</div>
     </div>
 
     <div class="container" id="main-container">
@@ -54,17 +81,38 @@
     </div>
 
     <script>
-        /* 추가된 인트로 제어 함수 */
-        function enterSite() {
+        // 인트로 클릭 시 스크롤 페이지 활성화
+        function startScrollPage() {
             document.getElementById('intro-screen').style.display = 'none';
-            document.getElementById('main-container').style.display = 'block';
+            document.getElementById('scroll-page').style.display = 'block';
+            window.scrollTo(0, 0);
         }
+
+        // 스크롤 감지 및 메인 컨테이너 노출 (40% 지점)
+        window.onscroll = function() {
+            const scrollPage = document.getElementById('scroll-page');
+            if (scrollPage.style.display === 'block') {
+                const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+                const mainContainer = document.getElementById('main-container');
+                const guideText = document.getElementById('guide-text');
+
+                if (scrollPercent >= 40) {
+                    mainContainer.style.display = 'block';
+                    mainContainer.style.animation = 'fadeIn 1s forwards';
+                    guideText.style.opacity = '0';
+                } else {
+                    mainContainer.style.display = 'none';
+                    guideText.style.opacity = '1';
+                }
+            }
+        };
 
         function showContent(id) {
             document.getElementById('home-main').style.display = 'none';
             const sections = document.querySelectorAll('.content-section');
             sections.forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
+            window.scrollTo(0, 0); // 콘텐츠 볼 때는 상단 고정 느낌
         }
 
         function showHome() {
