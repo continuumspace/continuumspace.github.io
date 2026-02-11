@@ -5,8 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Continuum Space</title>
     <style>
-        /* 기본 스타일 유지 */
-        body { margin: 0; background-color: #3d2b1f; color: #f5f5f5; font-family: 'Pretendard', sans-serif; transition: background-color 0.5s; }
+        /* 기본 스타일 유지 및 그라데이션 배경 적용 */
+        body { 
+            margin: 0; 
+            /* 웰컴 색상에서 아래쪽 녹색으로 부드럽게 이어지는 그라데이션 */
+            background: linear-gradient(to bottom, #ece6cc 0%, #ece6cc 20%, #2f3a2e 80%, #2f3a2e 100%);
+            background-attachment: fixed; /* 스크롤 시 배경 고정 */
+            color: #f5f1e4; /* 메인 화면 기본 글자색 */
+            font-family: 'Pretendard', sans-serif; 
+        }
         
         /* 메인 컨테이너 */
         .container { 
@@ -20,13 +27,15 @@
         } 
         
         h1 { font-size: 3.5rem; letter-spacing: -1px; margin-bottom: 10px; color: #6B8E23; }
-        p { font-size: 1.5rem; color: #a4c639; margin-bottom: 30px; font-weight: bold; }
+        
+        /* 메인 화면 문구 글자색 수정 */
+        p { font-size: 1.5rem; color: #f5f1e4; margin-bottom: 30px; font-weight: bold; }
+        
         .links a { text-decoration: none; color: #6B8E23; border: 2px solid #6B8E23; padding: 12px 25px; border-radius: 50px; transition: 0.3s; margin: 0 5px; font-weight: bold; cursor: pointer; display: inline-block; }
-        .links a:hover { background: #6B8E23; color: #3d2b1f; }
+        .links a:hover { background: #6B8E23; color: #2f3a2e; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -30%); } to { opacity: 1; transform: translate(-50%, -50%); } }
 
-        /* 탭 내부 스타일: 스크롤 방지 및 중앙 정렬 */
         .content-section { display: none; margin-top: 30px; }
         .content-section.active { display: block; }
         .back-btn { margin-top: 20px; display: inline-block; color: #6B8E23; cursor: pointer; text-decoration: underline; font-weight: bold; }
@@ -40,15 +49,15 @@
         #intro-screen h2 { color: #6B8E23; font-size: 2rem; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
-        /* --- 스크롤 페이지 영역 (요청색상 적용) --- */
+        /* 스크롤 페이지 영역 */
         #scroll-page {
             display: none;
             height: 250vh; 
-            background-color: #ece6cc; /* 요청하신 색상 */
             text-align: center;
             padding-top: 20vh;
         }
-        .scroll-guide { color: #2c2a24; font-size: 3rem; font-weight: bold; transition: opacity 0.5s; }
+        /* Welcome 글자색 수정 */
+        .scroll-guide { color: #2c2a24; font-size: 3.5rem; font-weight: bold; transition: opacity 0.5s; }
     </style>
 </head>
 <body>
@@ -85,7 +94,6 @@
         function startScrollPage() {
             document.getElementById('intro-screen').style.display = 'none';
             document.getElementById('scroll-page').style.display = 'block';
-            document.body.style.backgroundColor = '#ece6cc';
             window.scrollTo(0, 0);
         }
 
@@ -100,20 +108,16 @@
                     mainContainer.style.display = 'block';
                     mainContainer.style.animation = 'fadeIn 1s forwards';
                     guideText.style.opacity = '0';
-                    document.body.style.backgroundColor = '#3d2b1f';
                 } else {
                     mainContainer.style.display = 'none';
                     guideText.style.opacity = '1';
-                    document.body.style.backgroundColor = '#ece6cc';
                 }
             }
         };
 
         function showContent(id) {
-            // 탭 진입 시 스크롤 비활성화 및 메인 색상 고정
+            // 탭 진입 시 스크롤만 막고 배경색 변경 코드는 삭제했습니다.
             document.body.style.overflow = 'hidden';
-            document.body.style.backgroundColor = '#3d2b1f';
-            document.getElementById('scroll-page').style.display = 'none';
             document.getElementById('home-main').style.display = 'none';
             
             const sections = document.querySelectorAll('.content-section');
@@ -122,14 +126,10 @@
         }
 
         function showHome() {
-            // 메인으로 돌아올 때 다시 스크롤 가능하게 변경 (필요 시)
             document.getElementById('home-main').style.display = 'block';
             const sections = document.querySelectorAll('.content-section');
             sections.forEach(s => s.classList.remove('active'));
-            
-            // 다시 메인 스크롤 상태를 보여주고 싶으면 아래 주석 해제
-            // document.getElementById('scroll-page').style.display = 'block';
-            // document.body.style.overflow = 'auto';
+            // 돌아올 때도 배경색이 변하지 않도록 유지했습니다.
         }
     </script>
 </body>
