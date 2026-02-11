@@ -2,33 +2,25 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>태윤이의 비밀공간</title>
     <style>
-        /* 기본 테마: 진한 갈색 배경 */
-        body { background-color: #3d2b1f; color: white; text-align: center; font-family: sans-serif; margin: 0; padding-top: 100px; }
-        
-        /* 제목과 하단 문구: 올리브 그린 */
-        h1 { color: #6B8E23; font-size: 3em; margin-bottom: 10px; }
-        .footer { color: white; font-size: 1.2em; margin-top: 20px; }
+        /* 기존 디자인 그대로 유지 */
+        body { background-color: #3d2b1f; color: white; text-align: center; padding-top: 100px; }
+        h1 { color: #6B8E23; } 
+        .footer { margin-top: 20px; }
 
-        /* 메뉴 스타일: 투명 배경에 올리브 그린 테두리와 글자 */
-        nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 40px; }
+        /* 메뉴 스타일: 둥근 모서리 유지 */
+        nav { margin-top: 30px; }
         .menu-btn { 
-            padding: 10px 20px; 
-            background: none; 
-            color: #6B8E23; 
-            border: 2px solid #6B8E23; 
-            text-decoration: none; 
-            border-radius: 5px; 
-            font-size: 1.1em;
-            cursor: pointer;
+            display: inline-block; margin: 10px; padding: 15px 25px; 
+            background: none; color: #6B8E23; border: 2px solid #6B8E23; 
+            border-radius: 8px; /* 둥근 모서리 */
+            text-decoration: none; cursor: pointer; font-size: 16px;
         }
 
-        /* 섹션 제어 */
-        .page { display: none; padding: 50px 20px; }
+        /* 내용 표시 제어 */
+        .page { display: none; margin-top: 50px; }
         .page.active { display: block; }
-        .content-box h1 { color: #6B8E23; }
         .back-btn { display: inline-block; margin-top: 30px; color: #6B8E23; cursor: pointer; text-decoration: underline; }
     </style>
 </head>
@@ -36,7 +28,6 @@
 
     <div id="home" class="page active">
         <h1>태윤이의 비밀공간</h1>
-        <div class="footer">어, 어서오고</div>
         <nav>
             <button class="menu-btn" onclick="showPage('economy')">경제</button>
             <button class="menu-btn" onclick="showPage('stocks')">주식</button>
@@ -44,13 +35,14 @@
             <button class="menu-btn" onclick="showPage('movie')">영화</button>
             <button class="menu-btn" onclick="showPage('yet')">아직 없음</button>
         </nav>
+        <div class="footer">어, 어서오고</div>
     </div>
 
-    <div id="economy" class="page"><div class="content-box"><h1>경제</h1><p>내용을 입력하세요.</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div></div>
-    <div id="stocks" class="page"><div class="content-box"><h1>주식</h1><p>내용을 입력하세요.</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div></div>
-    <div id="music" class="page"><div class="content-box"><h1>음악</h1><p>내용을 입력하세요.</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div></div>
-    <div id="movie" class="page"><div class="content-box"><h1>영화</h1><p>내용을 입력하세요.</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div></div>
-    <div id="yet" class="page"><div class="content-box"><h1>아직 없음</h1><p>비어있습니다.</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div></div>
+    <div id="economy" class="page"><h1>경제</h1><p>내용 준비 중</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div>
+    <div id="stocks" class="page"><h1>주식</h1><p>내용 준비 중</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div>
+    <div id="music" class="page"><h1>음악</h1><p>내용 준비 중</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div>
+    <div id="movie" class="page"><h1>영화</h1><p>내용 준비 중</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div>
+    <div id="yet" class="page"><h1>아직 없음</h1><p>내용 준비 중</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div>
 
     <script>
         function showPage(pageId) {
