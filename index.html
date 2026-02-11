@@ -25,38 +25,39 @@
             z-index: 10;
         } 
         
-        /* 메인 화면 텍스트 설정 */
-        #home-main h1, #home-main p { color: #f5f1e4; margin: 0; font-family: inherit; }
-        #home-main h1 { font-size: 3.5rem; letter-spacing: -1px; margin-bottom: 10px; }
-        #home-main p { font-size: 1.5rem; margin-bottom: 30px; font-weight: bold; }
+        /* 메인 텍스트 색상 */
+        h1, p { color: #f5f1e4; margin: 0; }
+        h1 { font-size: 3.5rem; letter-spacing: -1px; margin-bottom: 10px; }
+        p { font-size: 1.5rem; margin-bottom: 30px; font-weight: bold; }
         
-        .links a { text-decoration: none; color: #6B8E23; border: 2px solid #6B8E23; padding: 12px 25px; border-radius: 50px; transition: 0.3s; margin: 0 5px; font-weight: bold; cursor: pointer; display: inline-block; font-family: inherit; }
+        /* 메뉴 링크 스타일 */
+        .links a { text-decoration: none; color: #6B8E23; border: 2px solid #6B8E23; padding: 12px 25px; border-radius: 50px; transition: 0.3s; margin: 0 5px; font-weight: bold; cursor: pointer; display: inline-block; }
         .links a:hover { background: #6B8E23; color: #2f3a2e; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -30%); } to { opacity: 1; transform: translate(-50%, -50%); } }
 
-        /* --- 탭 내부 화면 (배경 #ece6cc / 글자색 #2c2a24 / 폰트 복구) --- */
+        /* --- 탭 내부 화면 (오류 수정 및 색상 강제 적용) --- */
         .content-section { 
             display: none; 
             position: fixed; 
             top: 0; left: 0; 
             width: 100%; height: 100vh;
-            background-color: #ece6cc !important; 
-            z-index: 1000; 
+            background-color: #ece6cc !important; /* 탭 배경 아이보리 고정 */
+            z-index: 1000; /* 가장 위로 올림 */
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-family: 'Pretendard', sans-serif !important; /* 폰트 강제 적용 */
         }
         .content-section.active { display: flex; }
         
+        /* 탭 내부 글자색 #f5f1e4 강제 적용 */
         .content-section h1, 
         .content-section p { 
-            color: #2c2a24 !important; 
+            color: #f5f1e4 !important; 
             margin-bottom: 20px;
-            font-family: inherit !important;
         }
         
+        /* 뒤로가기 버튼 스타일 유지 */
         .back-btn { 
             margin-top: 20px; 
             display: inline-block; 
@@ -65,25 +66,25 @@
             text-decoration: underline; 
             font-weight: bold; 
             font-size: 1.2rem; 
-            font-family: inherit;
         }
 
+        /* 인트로 화면 */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: #3d2b1f; display: flex; justify-content: center; align-items: center;
             z-index: 2000; cursor: pointer; flex-direction: column;
-            font-family: inherit;
         }
         #intro-screen h2 { color: #6B8E23; font-size: 2rem; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
+        /* 스크롤 가이드 화면 */
         #scroll-page {
             display: none;
             height: 250vh; 
             text-align: center;
             padding-top: 20vh;
         }
-        .scroll-guide { color: #2c2a24; font-size: 3.5rem; font-weight: bold; transition: opacity 0.5s; font-family: inherit; }
+        .scroll-guide { color: #2c2a24; font-size: 3.5rem; font-weight: bold; transition: opacity 0.5s; }
     </style>
 </head>
 <body>
@@ -117,6 +118,7 @@
     <div id="yet" class="content-section"><h1>아직 없음</h1><p>내용 준비 중</p><span class="back-btn" onclick="showHome()">뒤로가기</span></div>
 
     <script>
+        // 색상 보간 함수
         function interpolateColor(color1, color2, factor) {
             const r1 = parseInt(color1.substring(1, 3), 16);
             const g1 = parseInt(color1.substring(3, 5), 16);
@@ -157,16 +159,20 @@
         };
 
         function showContent(id) {
+            // 모든 탭 숨기기 후 선택한 탭 보이기
             const sections = document.querySelectorAll('.content-section');
             sections.forEach(s => s.classList.remove('active'));
+            
             document.getElementById(id).classList.add('active');
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; // 탭 내부 스크롤 금지
         }
 
         function showHome() {
+            // 모든 탭 숨기기
             const sections = document.querySelectorAll('.content-section');
             sections.forEach(s => s.classList.remove('active'));
-            document.body.style.overflow = 'auto';
+            
+            document.body.style.overflow = 'auto'; // 다시 스크롤 가능하게
         }
     </script>
 </body>
