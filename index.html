@@ -16,25 +16,53 @@
         p { font-size: 1.5rem; color: #a4c639; margin-bottom: 30px; font-weight: bold; }
         
         /* 버튼: 테두리를 올리브 그린으로 변경 */
-        .links a { text-decoration: none; color: #6B8E23; border: 2px solid #6B8E23; padding: 12px 25px; border-radius: 50px; transition: 0.3s; margin: 0 5px; font-weight: bold; }
+        .links a { text-decoration: none; color: #6B8E23; border: 2px solid #6B8E23; padding: 12px 25px; border-radius: 50px; transition: 0.3s; margin: 0 5px; font-weight: bold; cursor: pointer; display: inline-block; }
         
         /* 버튼 호버: 마우스를 올리면 올리브 그린 배경에 갈색 글씨로 반전 */
         .links a:hover { background: #6B8E23; color: #3d2b1f; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- 추가된 부분: 탭 콘텐츠 스타일 (디자인 유지) --- */
+        .content-section { display: none; margin-top: 30px; animation: fadeIn 0.5s ease-out; }
+        .content-section.active { display: block; }
+        .back-btn { margin-top: 20px; display: inline-block; color: #6B8E23; cursor: pointer; text-decoration: underline; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>태윤이의 비밀공간</h1>
-        <p>어, 어서오고</p>
-        <div class="links">
-            <a href="#">경제</a>
-            <a href="#">주식</a>
-            <a href="#">음악</a>
-            <a href="#">영화</a>
-            <a href="#">아직 없음</a>
+        <div id="home-main">
+            <h1>태윤이의 비밀공간</h1>
+            <p>어, 어서오고</p>
+            <div class="links">
+                <a onclick="showContent('economy')">경제</a>
+                <a onclick="showContent('stocks')">주식</a>
+                <a onclick="showContent('music')">음악</a>
+                <a onclick="showContent('movie')">영화</a>
+                <a onclick="showContent('yet')">아직 없음</a>
+            </div>
         </div>
+
+        <div id="economy" class="content-section"><h1>경제</h1><p>내용 준비 중</p><span class="back-btn" onclick="showHome()">뒤로가기</span></div>
+        <div id="stocks" class="content-section"><h1>주식</h1><p>내용 준비 중</p><span class="back-btn" onclick="showHome()">뒤로가기</span></div>
+        <div id="music" class="content-section"><h1>음악</h1><p>내용 준비 중</p><span class="back-btn" onclick="showHome()">뒤로가기</span></div>
+        <div id="movie" class="content-section"><h1>영화</h1><p>내용 준비 중</p><span class="back-btn" onclick="showHome()">뒤로가기</span></div>
+        <div id="yet" class="content-section"><h1>아직 없음</h1><p>내용 준비 중</p><span class="back-btn" onclick="showHome()">뒤로가기</span></div>
     </div>
+
+    <script>
+        function showContent(id) {
+            document.getElementById('home-main').style.display = 'none';
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function showHome() {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(s => s.classList.remove('active'));
+            document.getElementById('home-main').style.display = 'block';
+        }
+    </script>
 </body>
 </html>
