@@ -25,18 +25,17 @@
             z-index: 10;
         } 
         
-        /* 메인 화면 텍스트 색상 (#f5f1e4 유지) */
-        #home-main h1, #home-main p { color: #f5f1e4; margin: 0; }
+        /* 메인 화면 텍스트 설정 */
+        #home-main h1, #home-main p { color: #f5f1e4; margin: 0; font-family: inherit; }
         #home-main h1 { font-size: 3.5rem; letter-spacing: -1px; margin-bottom: 10px; }
         #home-main p { font-size: 1.5rem; margin-bottom: 30px; font-weight: bold; }
         
-        /* 메뉴 링크 스타일 */
-        .links a { text-decoration: none; color: #6B8E23; border: 2px solid #6B8E23; padding: 12px 25px; border-radius: 50px; transition: 0.3s; margin: 0 5px; font-weight: bold; cursor: pointer; display: inline-block; }
+        .links a { text-decoration: none; color: #6B8E23; border: 2px solid #6B8E23; padding: 12px 25px; border-radius: 50px; transition: 0.3s; margin: 0 5px; font-weight: bold; cursor: pointer; display: inline-block; font-family: inherit; }
         .links a:hover { background: #6B8E23; color: #2f3a2e; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -30%); } to { opacity: 1; transform: translate(-50%, -50%); } }
 
-        /* --- 탭 내부 화면 (배경 #ece6cc / 글자색 #2c2a24) --- */
+        /* --- 탭 내부 화면 (배경 #ece6cc / 글자색 #2c2a24 / 폰트 복구) --- */
         .content-section { 
             display: none; 
             position: fixed; 
@@ -47,17 +46,17 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            font-family: 'Pretendard', sans-serif !important; /* 폰트 강제 적용 */
         }
         .content-section.active { display: flex; }
         
-        /* 탭 내부 제목 및 본문 글자색 #2c2a24로 변경 */
         .content-section h1, 
         .content-section p { 
             color: #2c2a24 !important; 
             margin-bottom: 20px;
+            font-family: inherit !important;
         }
         
-        /* 뒤로가기 버튼 스타일 유지 */
         .back-btn { 
             margin-top: 20px; 
             display: inline-block; 
@@ -66,25 +65,25 @@
             text-decoration: underline; 
             font-weight: bold; 
             font-size: 1.2rem; 
+            font-family: inherit;
         }
 
-        /* 인트로 화면 */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: #3d2b1f; display: flex; justify-content: center; align-items: center;
             z-index: 2000; cursor: pointer; flex-direction: column;
+            font-family: inherit;
         }
         #intro-screen h2 { color: #6B8E23; font-size: 2rem; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
-        /* 스크롤 가이드 화면 */
         #scroll-page {
             display: none;
             height: 250vh; 
             text-align: center;
             padding-top: 20vh;
         }
-        .scroll-guide { color: #2c2a24; font-size: 3.5rem; font-weight: bold; transition: opacity 0.5s; }
+        .scroll-guide { color: #2c2a24; font-size: 3.5rem; font-weight: bold; transition: opacity 0.5s; font-family: inherit; }
     </style>
 </head>
 <body>
