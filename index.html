@@ -2,55 +2,39 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>태윤이의 비밀공간</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continuum Space</title>
     <style>
-        /* 기존 디자인 그대로 유지 */
-        body { background-color: #3d2b1f; color: white; text-align: center; padding-top: 100px; }
-        h1 { color: #6B8E23; } 
-        .footer { margin-top: 20px; }
-
-        /* 메뉴 스타일: 둥근 모서리 유지 */
-        nav { margin-top: 30px; }
-        .menu-btn { 
-            display: inline-block; margin: 10px; padding: 15px 25px; 
-            background: none; color: #6B8E23; border: 2px solid #6B8E23; 
-            border-radius: 8px; /* 둥근 모서리 */
-            text-decoration: none; cursor: pointer; font-size: 16px;
-        }
-
-        /* 내용 표시 제어 */
-        .page { display: none; margin-top: 50px; }
-        .page.active { display: block; }
-        .back-btn { display: inline-block; margin-top: 30px; color: #6B8E23; cursor: pointer; text-decoration: underline; }
+        /* 배경: 요청하신 진한 갈색 */
+        body { margin: 0; background-color: #3d2b1f; color: #f5f5f5; font-family: 'Pretendard', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .container { text-align: center; animation: fadeIn 1.5s ease-out; }
+        
+        /* 제목: 요청하신 올리브 그린 (#6B8E23) */
+        h1 { font-size: 3.5rem; letter-spacing: -1px; margin-bottom: 10px; color: #6B8E23; }
+        
+        /* 문구: 글자도 올리브 그린 계열인데 조금 더 밝게 해서 가독성을 높였습니다 */
+        p { font-size: 1.5rem; color: #a4c639; margin-bottom: 30px; font-weight: bold; }
+        
+        /* 버튼: 테두리를 올리브 그린으로 변경 */
+        .links a { text-decoration: none; color: #6B8E23; border: 2px solid #6B8E23; padding: 12px 25px; border-radius: 50px; transition: 0.3s; margin: 0 5px; font-weight: bold; }
+        
+        /* 버튼 호버: 마우스를 올리면 올리브 그린 배경에 갈색 글씨로 반전 */
+        .links a:hover { background: #6B8E23; color: #3d2b1f; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-
-    <div id="home" class="page active">
+    <div class="container">
         <h1>태윤이의 비밀공간</h1>
-        <nav>
-            <button class="menu-btn" onclick="showPage('economy')">경제</button>
-            <button class="menu-btn" onclick="showPage('stocks')">주식</button>
-            <button class="menu-btn" onclick="showPage('music')">음악</button>
-            <button class="menu-btn" onclick="showPage('movie')">영화</button>
-            <button class="menu-btn" onclick="showPage('yet')">아직 없음</button>
-        </nav>
-        <div class="footer">어, 어서오고</div>
+        <p>어, 어서오고</p>
+        <div class="links">
+            <a href="#">경제</a>
+            <a href="#">주식</a>
+            <a href="#">음악</a>
+            <a href="#">영화</a>
+            <a href="#">아직 없음</a>
+        </div>
     </div>
-
-    <div id="economy" class="page"><h1>경제</h1><p>내용 준비 중</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div>
-    <div id="stocks" class="page"><h1>주식</h1><p>내용 준비 중</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div>
-    <div id="music" class="page"><h1>음악</h1><p>내용 준비 중</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div>
-    <div id="movie" class="page"><h1>영화</h1><p>내용 준비 중</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div>
-    <div id="yet" class="page"><h1>아직 없음</h1><p>내용 준비 중</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div>
-
-    <script>
-        function showPage(pageId) {
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-        }
-    </script>
-
 </body>
 </html>
