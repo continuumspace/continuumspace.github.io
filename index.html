@@ -5,32 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>태윤이의 비밀공간</title>
     <style>
-        /* 기본 디자인: 진한 갈색 배경, 흰색 글씨 */
-        body { background-color: #3d2b1f; color: white; text-align: center; font-family: sans-serif; margin: 0; padding-top: 80px; }
-        h1 { color: #6B8E23; font-size: 3em; margin-bottom: 10px; }
-        .sub-text { font-size: 1.2em; margin-bottom: 40px; }
-
-        /* 메뉴 버튼 스타일: 올리브 그린 */
-        nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; padding: 20px; }
-        .menu-btn { 
-            padding: 15px 25px; background-color: #6B8E23; color: white; 
-            text-decoration: none; border-radius: 10px; font-weight: bold; cursor: pointer; border: none;
-        }
-        .menu-btn:hover { background-color: #80a82c; }
-
-        /* 섹션(페이지) 숨기기 설정 */
-        .page { display: none; padding: 50px 20px; }
-        .page.active { display: block; } /* 클릭한 것만 보이게 함 */
+        /* 기본 테마: 진한 갈색 배경 */
+        body { background-color: #3d2b1f; color: white; text-align: center; font-family: sans-serif; margin: 0; padding-top: 100px; }
         
-        .content-box { background: rgba(255,255,255,0.1); padding: 40px; border-radius: 15px; max-width: 600px; margin: 0 auto; }
-        .home-btn { display: inline-block; margin-top: 30px; color: #6B8E23; text-decoration: underline; cursor: pointer; }
+        /* 제목과 하단 문구: 올리브 그린 */
+        h1 { color: #6B8E23; font-size: 3em; margin-bottom: 10px; }
+        .footer { color: white; font-size: 1.2em; margin-top: 20px; }
+
+        /* 메뉴 스타일: 투명 배경에 올리브 그린 테두리와 글자 */
+        nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 40px; }
+        .menu-btn { 
+            padding: 10px 20px; 
+            background: none; 
+            color: #6B8E23; 
+            border: 2px solid #6B8E23; 
+            text-decoration: none; 
+            border-radius: 5px; 
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+
+        /* 섹션 제어 */
+        .page { display: none; padding: 50px 20px; }
+        .page.active { display: block; }
+        .content-box h1 { color: #6B8E23; }
+        .back-btn { display: inline-block; margin-top: 30px; color: #6B8E23; cursor: pointer; text-decoration: underline; }
     </style>
 </head>
 <body>
 
     <div id="home" class="page active">
         <h1>태윤이의 비밀공간</h1>
-        <p class="sub-text">어, 어서오고</p>
+        <div class="footer">어, 어서오고</div>
         <nav>
             <button class="menu-btn" onclick="showPage('economy')">경제</button>
             <button class="menu-btn" onclick="showPage('stocks')">주식</button>
@@ -40,17 +46,16 @@
         </nav>
     </div>
 
-    <div id="economy" class="page"><div class="content-box"><h1>경제</h1><p>경제 관련 아직 만드는중이라 아무것도 없음ㅋ</p><a class="home-btn" onclick="showPage('home')">메인으로 돌아가기</a></div></div>
-    <div id="stocks" class="page"><div class="content-box"><h1>주식</h1><p>나만의 주식 분석 공간 만드는중이라 아무것도 없음ㅋ.</p><a class="home-btn" onclick="showPage('home')">메인으로 돌아가기</a></div></div>
-    <div id="music" class="page"><div class="content-box"><h1>음악</h1><p>좋아하는 음악 플레이리스트 만드는중이라 아무것도 없음ㅋ.</p><a class="home-btn" onclick="showPage('home')">메인으로 돌아가기</a></div></div>
-    <div id="movie" class="page"><div class="content-box"><h1>영화</h1><p>영화 감상평만드는중이라 아무것도 없음ㅋ</p><a class="home-btn" onclick="showPage('home')">메인으로 돌아가기</a></div></div>
-    <div id="yet" class="page"><div class="content-box"><h1>아직 없음</h1><p>nothing</p><a class="home-btn" onclick="showPage('home')">메인으로 돌아가기</a></div></div>
+    <div id="economy" class="page"><div class="content-box"><h1>경제</h1><p>내용을 입력하세요.</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div></div>
+    <div id="stocks" class="page"><div class="content-box"><h1>주식</h1><p>내용을 입력하세요.</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div></div>
+    <div id="music" class="page"><div class="content-box"><h1>음악</h1><p>내용을 입력하세요.</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div></div>
+    <div id="movie" class="page"><div class="content-box"><h1>영화</h1><p>내용을 입력하세요.</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div></div>
+    <div id="yet" class="page"><div class="content-box"><h1>아직 없음</h1><p>비어있습니다.</p><a class="back-btn" onclick="showPage('home')">돌아가기</a></div></div>
 
     <script>
-        // 버튼을 누르면 다른 페이지를 숨기고 해당 페이지만 보여주는 기능
         function showPage(pageId) {
             const pages = document.querySelectorAll('.page');
-            pages.forEach(page => page.classList.remove('active'));
+            pages.forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
         }
     </script>
