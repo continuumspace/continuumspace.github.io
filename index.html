@@ -5,17 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Continuum Space</title>
     <style>
-        /* 기본 스타일 유지 및 그라데이션 배경 적용 */
+        /* 초기 배경색은 아이보리 */
         body { 
             margin: 0; 
-            /* 웰컴 색상에서 아래쪽 녹색으로 부드럽게 이어지는 그라데이션 */
-            background: linear-gradient(to bottom, #ece6cc 0%, #ece6cc 20%, #2f3a2e 80%, #2f3a2e 100%);
-            background-attachment: fixed; /* 스크롤 시 배경 고정 */
-            color: #f5f1e4; /* 메인 화면 기본 글자색 */
+            background-color: #ece6cc; 
+            color: #f5f1e4; 
             font-family: 'Pretendard', sans-serif; 
+            transition: background-color 0.1s linear; /* 색 변화 부드럽게 */
         }
         
-        /* 메인 컨테이너 */
         .container { 
             text-align: center; 
             display: none; 
@@ -26,9 +24,8 @@
             z-index: 10;
         } 
         
-        h1 { font-size: 3.5rem; letter-spacing: -1px; margin-bottom: 10px; color: #6B8E23; }
-        
-        /* 메인 화면 문구 글자색 수정 */
+        /* 탭 내 모든 글자색 통일 */
+        h1 { font-size: 3.5rem; letter-spacing: -1px; margin-bottom: 10px; color: #f5f1e4; }
         p { font-size: 1.5rem; color: #f5f1e4; margin-bottom: 30px; font-weight: bold; }
         
         .links a { text-decoration: none; color: #6B8E23; border: 2px solid #6B8E23; padding: 12px 25px; border-radius: 50px; transition: 0.3s; margin: 0 5px; font-weight: bold; cursor: pointer; display: inline-block; }
@@ -40,7 +37,6 @@
         .content-section.active { display: block; }
         .back-btn { margin-top: 20px; display: inline-block; color: #6B8E23; cursor: pointer; text-decoration: underline; font-weight: bold; }
 
-        /* 인트로 화면 */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: #3d2b1f; display: flex; justify-content: center; align-items: center;
@@ -49,14 +45,12 @@
         #intro-screen h2 { color: #6B8E23; font-size: 2rem; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
-        /* 스크롤 페이지 영역 */
         #scroll-page {
             display: none;
             height: 250vh; 
             text-align: center;
             padding-top: 20vh;
         }
-        /* Welcome 글자색 수정 */
         .scroll-guide { color: #2c2a24; font-size: 3.5rem; font-weight: bold; transition: opacity 0.5s; }
     </style>
 </head>
@@ -91,6 +85,23 @@
     </div>
 
     <script>
+        // 두 색상 사이를 보간하는 함수
+        function interpolateColor(color1, color2, factor) {
+            const r1 = parseInt(color1.substring(1, 3), 16);
+            const g1 = parseInt(color1.substring(3, 5), 16);
+            const b1 = parseInt(color1.substring(5, 7), 16);
+
+            const r2 = parseInt(color2.substring(1, 3), 16);
+            const g2 = parseInt(color2.substring(3, 5), 16);
+            const b2 = parseInt(color2.substring(5, 7), 16);
+
+            const r = Math.round(r1 + factor * (r2 - r1));
+            const g = Math.round(g1 + factor * (g2 - g1));
+            const b = Math.round(b1 + factor * (b2 - b1));
+
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
         function startScrollPage() {
             document.getElementById('intro-screen').style.display = 'none';
             document.getElementById('scroll-page').style.display = 'block';
@@ -100,11 +111,18 @@
         window.onscroll = function() {
             const scrollPage = document.getElementById('scroll-page');
             if (scrollPage.style.display === 'block') {
-                const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+                const scrollHeight = document.body.scrollHeight - window.innerHeight;
+                const scrollPercent = (window.scrollY / scrollHeight);
+                
+                // 실시간 색상 변경 (아이보리 -> 짙은 녹색)
+                const newColor = interpolateColor("#ece6cc", "#2f3a2e", Math.min(scrollPercent, 1));
+                document.body.style.backgroundColor = newColor;
+
                 const mainContainer = document.getElementById('main-container');
                 const guideText = document.getElementById('guide-text');
 
-                if (scrollPercent >= 40) {
+                // 40% 지점에서 메인 표시
+                if (scrollPercent >= 0.4) {
                     mainContainer.style.display = 'block';
                     mainContainer.style.animation = 'fadeIn 1s forwards';
                     guideText.style.opacity = '0';
@@ -116,20 +134,19 @@
         };
 
         function showContent(id) {
-            // 탭 진입 시 스크롤만 막고 배경색 변경 코드는 삭제했습니다.
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; // 탭 안에서 스크롤 금지
             document.getElementById('home-main').style.display = 'none';
-            
             const sections = document.querySelectorAll('.content-section');
             sections.forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
         }
 
         function showHome() {
+            // 메인으로 돌아올 때 다시 스크롤 가능하게 복구
+            document.body.style.overflow = 'auto';
             document.getElementById('home-main').style.display = 'block';
             const sections = document.querySelectorAll('.content-section');
             sections.forEach(s => s.classList.remove('active'));
-            // 돌아올 때도 배경색이 변하지 않도록 유지했습니다.
         }
     </script>
 </body>
