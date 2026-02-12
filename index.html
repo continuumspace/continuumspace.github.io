@@ -33,7 +33,7 @@
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; width: 85%; max-width: 1000px; padding-bottom: 50px; }
         .movie-card { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: #2c2a24; position: relative; }
         .movie-card img { width: 100%; height: 280px; object-fit: cover; border-radius: 10px; }
-        .movie-card .del-btn { position: absolute; top: 5px; right: 10px; color: #ccc; cursor: pointer; }
+        .movie-card .del-btn { position: absolute; top: 5px; right: 10px; color: #ccc; cursor: pointer; font-size: 1.2rem; font-weight: bold; }
         .add-btn-circle { width: 60px; height: 60px; background: #6B8E23; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; cursor: pointer; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
         .modal-content { background: #fff; padding: 20px; border-radius: 15px; width: 300px; color: #2c2a24; }
@@ -44,15 +44,18 @@
         .guest-entry { background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 10px; position: relative; color: #2c2a24; border-left: 5px solid #6B8E23; }
         .guest-del { position: absolute; top: 10px; right: 10px; color: #e74c3c; cursor: pointer; font-size: 0.8rem; }
 
-        /* 인트로 및 스크롤 */
+        /* 인트로 깜빡이 효과 복구 */
         #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #3d2b1f; display: flex; justify-content: center; align-items: center; z-index: 3000; cursor: pointer; flex-direction: column; }
+        #intro-screen h2 { color: #6B8E23; font-size: 2rem; animation: pulse 2s infinite; } /* 애니메이션 적용 */
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
         #scroll-page { display: none; height: 250vh; text-align: center; padding-top: 20vh; }
         .scroll-guide { color: #2c2a24; font-size: 3.5rem; font-weight: bold; }
     </style>
 </head>
 <body>
     <div id="intro-screen" onclick="startScrollPage()">
-        <h2 style="color:#6B8E23">TAP IN</h2>
+        <h2>TAP IN</h2>
         <p style="color:#6B8E23">ENJOY</p>
     </div>
 
@@ -88,7 +91,7 @@
 
     <div id="music" class="content-section">
         <h1>My Playlist</h1>
-        <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX8Ueb9CidzhR?utm_source=generator" width="85%" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" style="border-radius:12px;"></iframe>
+        <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX8Ueb9CjX80N" width="85%" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" style="border-radius:12px;"></iframe>
         <span class="back-btn" onclick="showHome()">뒤로가기</span>
     </div>
 
@@ -122,7 +125,7 @@
     </div>
 
     <script>
-        const ADMIN_PW = "1234"; // 방명록 삭제용 암호
+        const ADMIN_PW = "9906281"; // 관리자 암호 변경
 
         function startScrollPage() {
             document.getElementById('intro-screen').style.display = 'none';
@@ -135,13 +138,10 @@
             if (scrollPage.style.display === 'block') {
                 const scrollHeight = document.body.scrollHeight - window.innerHeight;
                 const scrollPercent = (window.scrollY / scrollHeight);
-                
-                // 배경색 변경
                 const r = Math.round(236 + (47 - 236) * scrollPercent);
                 const g = Math.round(230 + (58 - 230) * scrollPercent);
                 const b = Math.round(204 + (46 - 204) * scrollPercent);
                 document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
-
                 const main = document.getElementById('main-container');
                 const guide = document.getElementById('guide-text');
                 if (scrollPercent >= 0.4) {
@@ -170,7 +170,6 @@
             document.body.style.overflow = 'auto';
         }
 
-        /* --- 영화 로직 --- */
         function toggleModal(show) { document.getElementById('movie-modal').style.display = show ? 'flex' : 'none'; }
 
         function addMovie() {
@@ -178,15 +177,12 @@
             const img = document.getElementById('m-img').value || 'https://via.placeholder.com/200x300?text=No+Image';
             const rate = document.getElementById('m-rate').value;
             const review = document.getElementById('m-review').value;
-            
             if(!title) return alert("제목을 입력하세요!");
             const movies = JSON.parse(localStorage.getItem('my-movies') || '[]');
             movies.unshift({ title, img, rate, review });
             localStorage.setItem('my-movies', JSON.stringify(movies));
-            
             toggleModal(false);
             loadMovies();
-            // 폼 초기화
             document.getElementById('m-title').value = ''; document.getElementById('m-img').value = '';
         }
 
@@ -205,13 +201,15 @@
         }
 
         function delMovie(i) {
-            const movies = JSON.parse(localStorage.getItem('my-movies') || '[]');
-            movies.splice(i, 1);
-            localStorage.setItem('my-movies', JSON.stringify(movies));
-            loadMovies();
+            const pw = prompt("관리자 암호를 입력하세요.");
+            if(pw === ADMIN_PW) {
+                const movies = JSON.parse(localStorage.getItem('my-movies') || '[]');
+                movies.splice(i, 1);
+                localStorage.setItem('my-movies', JSON.stringify(movies));
+                loadMovies();
+            } else { alert("암호가 틀렸습니다."); }
         }
 
-        /* --- 방명록 로직 --- */
         function addGuestbook() {
             const input = document.getElementById('gb-input');
             if(!input.value) return;
@@ -241,9 +239,7 @@
                 entries.splice(i, 1);
                 localStorage.setItem('my-gb', JSON.stringify(entries));
                 loadGuestbook();
-            } else {
-                alert("암호가 틀렸습니다.");
-            }
+            } else { alert("암호가 틀렸습니다."); }
         }
     </script>
 </body>
