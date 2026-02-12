@@ -4,67 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Continuum Space</title>
-    <style>
-        body { 
-            margin: 0; background-color: #ece6cc; color: #f5f1e4; 
-            font-family: 'Pretendard', sans-serif; transition: background-color 0.1s linear; 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // 태윤님의 Firebase 설정값 적용
+        const firebaseConfig = {
+            apiKey: "AIzaSyB_gx1Umj-BG4MKj8oURTjxMnFmXy-j5A",
+            authDomain: "continuumspace.firebaseapp.com",
+            projectId: "continuumspace",
+            storageBucket: "continuumspace.firebasestorage.app",
+            messagingSenderId: "226264074735",
+            appId: "1:226264074735:web:54d80a804d265578c88e1a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // 전역 변수 설정
+        window.ADMIN_PW = "9906281";
+        window.currentTargetKey = ""; 
+        window.editIndex = -1;
+        window.allData = { "memo-economy": [], "memo-stocks": [], "music-list": [], "movies-watched": [], "movies-will": [], "guestbook": [] };
+
+        // 폰-컴퓨터 실시간 데이터 동기화 감시
+        onSnapshot(doc(db, "space", "mainData"), (docSnap) => {
+            if (docSnap.exists()) {
+                window.allData = docSnap.data();
+                refreshUI();
+            }
+        });
+
+        // 데이터 저장 함수 (서버로 전송)
+        window.saveToDB = async () => {
+            await setDoc(doc(db, "space", "mainData"), window.allData);
+        };
+
+        // 화면 갱신 함수
+        function refreshUI() {
+            const active = document.querySelector('.content-section.active');
+            if(active) {
+                const id = active.id;
+                if(id === 'economy') loadItems('memo-economy');
+                if(id === 'stocks') loadItems('memo-stocks');
+                if(id === 'music') loadItems('music-list');
+                if(id === 'guestbook') loadGuestbook();
+            }
+            if(document.getElementById('layer-watched').classList.contains('active')) loadItems('movies-watched');
+            if(document.getElementById('layer-will').classList.contains('active')) loadItems('movies-will');
         }
-        .container { 
-            text-align: center; display: none; position: fixed; 
-            top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            width: 100%; z-index: 10;
-        } 
+    </script>
+
+    <style>
+        body { margin: 0; background-color: #ece6cc; color: #f5f1e4; font-family: 'Pretendard', sans-serif; transition: background-color 0.1s linear; }
+        .container { text-align: center; display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; z-index: 10; } 
         #home-main h1 { font-size: 3.5rem; letter-spacing: -1px; margin-bottom: 10px; color: #f5f1e4; }
         #home-main p { font-size: 1.5rem; margin-bottom: 30px; font-weight: bold; color: #f5f1e4; }
         .links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
         .links a { text-decoration: none; color: #6B8E23; border: 2px solid #6B8E23; padding: 12px 25px; border-radius: 50px; transition: 0.3s; font-weight: bold; cursor: pointer; }
         .links a:hover { background: #6B8E23; color: #2f3a2e; }
 
-        .content-section { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background-color: #ece6cc !important; z-index: 1000; flex-direction: column;
-            align-items: center; overflow: hidden;
-        }
+        .content-section { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: #ece6cc !important; z-index: 1000; flex-direction: column; align-items: center; overflow: hidden; }
         .content-section.active { display: flex; }
         .content-section h1 { color: #2c2a24 !important; margin-top: 40px; margin-bottom: 20px; font-size: 2.2rem; }
         
-        .fixed-footer {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 70px;
-            background: rgba(236, 230, 204, 0.9); display: flex; justify-content: center; align-items: center; z-index: 1100;
-        }
+        .fixed-footer { position: absolute; bottom: 0; left: 0; width: 100%; height: 70px; background: rgba(236, 230, 204, 0.9); display: flex; justify-content: center; align-items: center; z-index: 1100; }
         .back-btn { color: #6B8E23; cursor: pointer; text-decoration: underline; font-weight: bold; font-size: 1.1rem; }
         .scroll-area { width: 100%; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding-bottom: 100px; }
 
-        /* 영화 카드: 4열 배치로 변경 */
-        .movie-grid { width: 95%; max-width: 1400px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 20px; }
-        .movie-card { 
-            background: white; border-radius: 15px; overflow: hidden; color: #333; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; display: flex; flex-direction: column;
-            border: 2px solid #bbb; 
-        }
-        .movie-card img { width: 100%; height: 300px; object-fit: contain; background: #f9f9f9; padding-top: 15px; }
-        .movie-card-content { padding: 15px; text-align: left; }
-
-        /* 일반 메모지 그리드: 4열 유지 */
-        .item-grid { width: 95%; max-width: 1200px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
-        .item-card { 
-            background: white; border-radius: 15px; padding: 15px; color: #333; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.08); position: relative; 
-            display: flex; flex-direction: column; align-items: center; text-align: center;
-            aspect-ratio: 1 / 1.1; justify-content: flex-start; border: 1px solid #ddd;
-        }
-        .item-card img { width: 100px; height: 100px; object-fit: cover; border-radius: 12px; margin-bottom: 12px; margin-top: 10px; }
-        .item-info h3 { margin: 0; font-size: 1.1rem; color: #2c2a24; }
-        .item-info p { margin: 8px 0 0; font-size: 0.85rem; color: #666; }
+        /* 요청 사양: 4열 그리드 및 큰 이미지 */
+        .item-grid, .movie-grid { width: 95%; max-width: 1400px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 20px; }
+        .item-card, .movie-card { background: white; border-radius: 15px; padding: 15px; color: #333; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; border: 2px solid #bbb; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .item-card img { width: 120px; height: 120px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; }
+        .movie-card img { width: 100%; height: 280px; object-fit: contain; background: #f9f9f9; padding-top: 20px; margin-bottom: 15px; }
+        .movie-card-content { padding: 10px; text-align: left; width: 100%; }
         
-        /* 반응형 설정 */
         @media (max-width: 1200px) { .movie-grid, .item-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 800px) { .movie-grid, .item-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 500px) { .movie-grid, .item-grid { grid-template-columns: repeat(1, 1fr); } }
-
-        .btn-group { position: absolute; top: 10px; right: 10px; display: flex; gap: 8px; }
-        .icon-btn { cursor: pointer; font-size: 0.9rem; opacity: 0.5; color: #333; }
-        .icon-btn:hover { opacity: 1; color: #6B8E23; }
 
         /* 영화 탭 호버 효과 복구 */
         #movie.content-section { flex-direction: row; padding: 0; }
@@ -77,6 +94,10 @@
         
         .detail-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; z-index: 1050; overflow: hidden; }
         .detail-layer.active { display: flex; }
+
+        .btn-group { position: absolute; top: 10px; right: 10px; display: flex; gap: 8px; }
+        .icon-btn { cursor: pointer; font-size: 0.9rem; opacity: 0.5; color: #333; }
+        .icon-btn:hover { opacity: 1; color: #6B8E23; }
 
         .guest-entry { background: white; color: #2c2a24; padding: 15px; border-radius: 12px; margin-bottom: 10px; position: relative; border-left: 6px solid #6B8E23; text-align: left; width: 100%; box-sizing: border-box; }
 
@@ -186,18 +207,15 @@
         <div class="modal-content">
             <h3 id="modal-title">정보 입력</h3>
             <input type="text" id="in-name" placeholder="제목/이름">
-            <input type="text" id="in-url" placeholder="이미지(포스터) URL">
+            <input type="text" id="in-url" placeholder="이미지 URL">
             <input type="text" id="in-rate" placeholder="별점 (예: ★★★★☆)">
-            <textarea id="in-desc" placeholder="내용 및 한 줄 평" rows="3"></textarea>
+            <textarea id="in-desc" placeholder="내용 입력" rows="3"></textarea>
             <button onclick="saveItem()" style="width:100%; padding:12px; background:#6B8E23; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">저장하기</button>
             <button onclick="closeItemModal()" style="width:100%; padding:10px; background:#ccc; border:none; border-radius:8px; margin-top:5px; cursor:pointer;">취소</button>
         </div>
     </div>
 
     <script>
-        const ADMIN_PW = "9906281";
-        let currentTargetKey = ""; let editIndex = -1;
-
         function startScrollPage() { document.getElementById('intro-screen').style.display='none'; document.getElementById('scroll-page').style.display='block'; window.scrollTo(0,0); }
         window.onscroll = function() {
             const scrollPage = document.getElementById('scroll-page');
@@ -216,21 +234,24 @@
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.body.style.overflow = 'hidden';
-            if(id === 'economy') loadItems('memo-economy');
-            if(id === 'stocks') loadItems('memo-stocks');
-            if(id === 'music') loadItems('music-list');
-            if(id === 'guestbook') loadGuestbook();
+            refreshItems(id);
         }
         function showHome() { document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active')); document.body.style.overflow='auto'; closeMovieLayer('watched'); closeMovieLayer('will'); }
         function openMovieLayer(type) { document.getElementById('layer-' + type).classList.add('active'); loadItems('movies-' + type); }
         function closeMovieLayer(type) { document.getElementById('layer-' + type).classList.remove('active'); }
 
+        function refreshItems(id) {
+            if(id === 'economy') loadItems('memo-economy');
+            if(id === 'stocks') loadItems('memo-stocks');
+            if(id === 'music') loadItems('music-list');
+            if(id === 'guestbook') loadGuestbook();
+        }
+
         function openItemModal(key, index = -1) {
-            currentTargetKey = key; editIndex = index;
+            window.currentTargetKey = key; window.editIndex = index;
             document.getElementById('modal-title').innerText = index === -1 ? "새 항목 추가" : "항목 수정";
             if(index !== -1) {
-                const list = JSON.parse(localStorage.getItem(key));
-                const item = list[index];
+                const item = window.allData[key][index];
                 document.getElementById('in-name').value = item.name;
                 document.getElementById('in-url').value = item.url || "";
                 document.getElementById('in-rate').value = item.rate || "";
@@ -243,77 +264,64 @@
         }
         function closeItemModal() { document.getElementById('item-modal').style.display = 'none'; }
 
-        function saveItem() {
+        async function saveItem() {
             const name = document.getElementById('in-name').value;
             const url = document.getElementById('in-url').value || 'https://via.placeholder.com/400x600?text=No+Image';
             const rate = document.getElementById('in-rate').value;
             const desc = document.getElementById('in-desc').value;
             if(!name) return alert("제목을 입력해주세요.");
-            const list = JSON.parse(localStorage.getItem(currentTargetKey) || '[]');
-            if(editIndex === -1) { list.unshift({ name, url, rate, desc }); }
-            else { if(prompt("수정 암호") !== ADMIN_PW) return alert("암호 오류"); list[editIndex] = { name, url, rate, desc }; }
-            localStorage.setItem(currentTargetKey, JSON.stringify(list));
-            loadItems(currentTargetKey); closeItemModal();
+            
+            if(window.editIndex === -1) {
+                window.allData[window.currentTargetKey].unshift({ name, url, rate, desc });
+            } else {
+                if(prompt("수정 암호") !== window.ADMIN_PW) return alert("암호 오류");
+                window.allData[window.currentTargetKey][window.editIndex] = { name, url, rate, desc };
+            }
+            await window.saveToDB();
+            closeItemModal();
         }
 
         function loadItems(key) {
-            const list = JSON.parse(localStorage.getItem(key) || '[]');
+            const list = window.allData[key] || [];
             const grid = document.getElementById('grid-' + key);
             if(!grid) return;
-            if(key.includes('movies')) {
-                grid.innerHTML = list.map((m, i) => `
-                    <div class="movie-card">
-                        <img src="${m.url}" onerror="this.src='https://via.placeholder.com/400x600?text=Poster'">
-                        <div class="movie-card-content">
-                            <h3>${m.name}</h3>
-                            ${m.rate ? `<div style="color:#f1c40f;">${m.rate}</div>` : ''}
-                            <p>${m.desc}</p>
-                        </div>
-                        <div class="btn-group">
-                            <span class="icon-btn" onclick="openItemModal('${key}', ${i})">✎</span>
-                            <span class="icon-btn" onclick="delItem('${key}', ${i})">×</span>
-                        </div>
-                    </div>`).join('');
-            } else {
-                grid.innerHTML = list.map((m, i) => `
-                    <div class="item-card">
-                        ${m.url ? `<img src="${m.url}" onerror="this.style.display='none'">` : ''}
-                        <div class="item-info">
-                            <h3>${m.name}</h3>
-                            <p>${m.desc}</p>
-                        </div>
-                        <div class="btn-group">
-                            <span class="icon-btn" onclick="openItemModal('${key}', ${i})">✎</span>
-                            <span class="icon-btn" onclick="delItem('${key}', ${i})">×</span>
-                        </div>
-                    </div>`).join('');
-            }
+            grid.innerHTML = list.map((m, i) => `
+                <div class="${key.includes('movies') ? 'movie-card' : 'item-card'}">
+                    <img src="${m.url}" onerror="this.src='https://via.placeholder.com/400x600?text=No+Image'">
+                    <div class="${key.includes('movies') ? 'movie-card-content' : 'item-info'}">
+                        <h3>${m.name}</h3>
+                        ${m.rate ? `<div style="color:#f1c40f;">${m.rate}</div>` : ''}
+                        <p>${m.desc}</p>
+                    </div>
+                    <div class="btn-group">
+                        <span class="icon-btn" onclick="openItemModal('${key}', ${i})">✎</span>
+                        <span class="icon-btn" onclick="delItem('${key}', ${i})">×</span>
+                    </div>
+                </div>`).join('');
         }
 
-        function delItem(key, i) {
-            if(prompt("삭제 암호") === ADMIN_PW) {
-                const list = JSON.parse(localStorage.getItem(key));
-                list.splice(i, 1); localStorage.setItem(key, JSON.stringify(list));
-                loadItems(key);
+        async function delItem(key, i) {
+            if(prompt("삭제 암호") === window.ADMIN_PW) {
+                window.allData[key].splice(i, 1);
+                await window.saveToDB();
             } else { alert("암호 오류"); }
         }
 
-        function addGuestbook() {
+        async function addGuestbook() {
             const input = document.getElementById('gb-input'); if(!input.value) return;
-            const list = JSON.parse(localStorage.getItem('my-gb-v2') || '[]');
-            list.unshift({ text: input.value, date: new Date().toLocaleString() });
-            localStorage.setItem('my-gb-v2', JSON.stringify(list));
-            input.value = ''; loadGuestbook();
+            window.allData.guestbook.unshift({ text: input.value, date: new Date().toLocaleString() });
+            await window.saveToDB();
+            input.value = '';
         }
         function loadGuestbook() {
-            const entries = JSON.parse(localStorage.getItem('my-gb-v2') || '[]');
+            const entries = window.allData.guestbook || [];
             document.getElementById('guestbook-list').innerHTML = entries.map((e, i) => `
                 <div class="guest-entry">
                     <div class="btn-group"><span class="icon-btn" onclick="delGuestbook(${i})">×</span></div>
                     <strong>익명</strong>: ${e.text}<br><small style="color:#999">${e.date}</small>
                 </div>`).join('');
         }
-        function delGuestbook(i) { if(prompt("삭제 암호") === ADMIN_PW) { const list = JSON.parse(localStorage.getItem('my-gb-v2')); list.splice(i,1); localStorage.setItem('my-gb-v2', JSON.stringify(list)); loadGuestbook(); } }
+        async function delGuestbook(i) { if(prompt("삭제 암호") === window.ADMIN_PW) { window.allData.guestbook.splice(i,1); await window.saveToDB(); } }
     </script>
 </body>
 </html>
