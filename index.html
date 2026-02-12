@@ -28,18 +28,12 @@
         .content-section.active { display: flex; }
         .content-section h1 { color: #2c2a24 !important; margin-top: 40px; margin-bottom: 20px; font-size: 2.2rem; }
         
-        /* 고정 하단 바 */
         .fixed-footer {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 70px;
             background: rgba(236, 230, 204, 0.9); display: flex; justify-content: center; align-items: center; z-index: 1100;
         }
         .back-btn { color: #6B8E23; cursor: pointer; text-decoration: underline; font-weight: bold; font-size: 1.1rem; }
-
-        /* 스크롤 영역 */
         .scroll-area { width: 100%; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding-bottom: 80px; }
-
-        /* 위젯 크기 고정 */
-        .widget-frame { width: 90%; height: 500px; border: none; border-radius: 15px; flex-shrink: 0; margin-bottom: 20px; }
 
         /* 카드 및 메모 스타일 */
         .item-grid { width: 90%; max-width: 600px; display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
@@ -48,18 +42,23 @@
         .item-info { flex: 1; text-align: left; }
         .item-info h3 { margin: 0; font-size: 1.1rem; color: #2c2a24; }
         .item-info p { margin: 5px 0 0; font-size: 0.85rem; color: #666; white-space: pre-wrap; }
-        .item-info .rating { color: #f1c40f; font-size: 0.9rem; margin-top: 3px; }
-        .btn-group { position: absolute; top: 10px; right: 10px; display: flex; gap: 8px; }
-        .icon-btn { cursor: pointer; font-size: 0.9rem; font-weight: bold; opacity: 0.5; }
+        .btn-group { position: absolute; top: 10px; right: 10px; display: flex; gap: 10px; }
+        .icon-btn { cursor: pointer; font-size: 0.9rem; font-weight: bold; opacity: 0.5; color: #333; }
         .icon-btn:hover { opacity: 1; color: #6B8E23; }
 
-        /* 영화 탭 2분할 */
+        /* 영화 탭 복구 (색상변화 및 큰 글씨) */
         #movie.content-section { flex-direction: row; padding: 0; }
         .movie-split { width: 50%; height: 100%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.4s; }
         .split-left { background: #5B5956; color: #E2DEDB; }
+        .split-left:hover { background: #8FBFD6 !important; color: #5B5956 !important; }
         .split-right { background: #E2DEDB; color: #5B5956; }
+        .split-right:hover { background: #E9A4C8 !important; color: #E2DEDB !important; }
+        .movie-split h2 { font-size: 4rem; pointer-events: none; }
         .detail-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; z-index: 1050; overflow: hidden; }
         .detail-layer.active { display: flex; }
+
+        /* 방명록 카드 스타일 */
+        .guest-entry { background: white !important; color: #2c2a24; padding: 15px; border-radius: 12px; margin-bottom: 10px; position: relative; border-left: 6px solid #6B8E23; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: left; width: 100%; box-sizing: border-box; }
 
         /* 인트로 */
         #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #3d2b1f; display: flex; justify-content: center; align-items: center; z-index: 3000; cursor: pointer; flex-direction: column; }
@@ -100,8 +99,8 @@
     <div id="economy" class="content-section">
         <h1>경제 뉴스</h1>
         <div class="scroll-area">
-            <iframe class="widget-frame" src="https://www.tradingview-widget.com/embed-widget/timeline/?locale=kr"></iframe>
-            <div style="width:90%; max-width:600px; text-align:left; color:#2c2a24; font-weight:bold; margin-top:10px;">경제 메모</div>
+            <iframe src="https://www.tradingview-widget.com/embed-widget/timeline/?locale=kr" style="width: 90%; height: 500px; border: none; border-radius: 15px; flex-shrink: 0;"></iframe>
+            <div style="width:90%; max-width:600px; text-align:left; color:#2c2a24; font-weight:bold; margin-top:20px;">경제 메모</div>
             <div onclick="openItemModal('memo-economy')" style="cursor:pointer; color:#6B8E23; margin: 10px 0; font-weight: bold;">+ 메모 추가</div>
             <div class="item-grid" id="grid-memo-economy"></div>
         </div>
@@ -111,8 +110,8 @@
     <div id="stocks" class="content-section">
         <h1>주식 시세</h1>
         <div class="scroll-area">
-            <iframe class="widget-frame" src="https://www.tradingview-widget.com/embed-widget/market-overview/?locale=kr"></iframe>
-            <div style="width:90%; max-width:600px; text-align:left; color:#2c2a24; font-weight:bold; margin-top:10px;">주식 메모</div>
+            <iframe src="https://www.tradingview-widget.com/embed-widget/market-overview/?locale=kr" style="width: 90%; height: 500px; border: none; border-radius: 15px; flex-shrink: 0;"></iframe>
+            <div style="width:90%; max-width:600px; text-align:left; color:#2c2a24; font-weight:bold; margin-top:20px;">주식 메모</div>
             <div onclick="openItemModal('memo-stocks')" style="cursor:pointer; color:#6B8E23; margin: 10px 0; font-weight: bold;">+ 메모 추가</div>
             <div class="item-grid" id="grid-memo-stocks"></div>
         </div>
@@ -122,7 +121,7 @@
     <div id="music" class="content-section">
         <h1>내 플리</h1>
         <div class="scroll-area">
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M" width="85%" height="352" frameBorder="0" allow="autoplay; encrypted-media; fullscreen" style="border-radius:12px; margin-bottom:30px; flex-shrink: 0;"></iframe>
+            <iframe src="http://googleusercontent.com/spotify.com/7" width="85%" height="500" frameBorder="0" allow="autoplay; encrypted-media; fullscreen" style="border-radius:12px; margin-bottom:30px; flex-shrink: 0;"></iframe>
             <div style="width:90%; max-width:600px; text-align:left; color:#2c2a24; font-weight:bold; font-size:1.2rem; margin-bottom:10px;">추천</div>
             <div onclick="openItemModal('music-list')" style="cursor:pointer; font-size:1.5rem; color:#6B8E23; border:2px solid #6B8E23; width:40px; height:40px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-bottom:20px;">+</div>
             <div class="item-grid" id="grid-music-list"></div>
@@ -169,10 +168,10 @@
     <div id="item-modal" class="modal">
         <div class="modal-content">
             <h3 id="modal-title">내용 추가</h3>
-            <input type="text" id="in-name" placeholder="제목">
-            <input type="text" id="in-url" placeholder="이미지 URL (메모 시 생략 가능)">
+            <input type="text" id="in-name" placeholder="제목/내용">
+            <input type="text" id="in-url" placeholder="이미지 URL">
             <input type="text" id="in-rate" placeholder="별점 (예: ★★★★★)">
-            <textarea id="in-desc" placeholder="내용 입력"></textarea>
+            <textarea id="in-desc" placeholder="상세 설명"></textarea>
             <button onclick="saveItem()" style="width:100%; padding:12px; background:#6B8E23; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">저장하기</button>
             <button onclick="closeItemModal()" style="width:100%; padding:10px; background:#ccc; border:none; border-radius:8px; margin-top:5px; cursor:pointer;">취소</button>
         </div>
@@ -233,13 +232,13 @@
             const url = document.getElementById('in-url').value;
             const rate = document.getElementById('in-rate').value;
             const desc = document.getElementById('in-desc').value;
-            if(!name) return alert("제목을 입력해주세요.");
+            if(!name) return alert("내용을 입력해주세요.");
 
             const list = JSON.parse(localStorage.getItem(currentTargetKey) || '[]');
             if(editIndex === -1) {
                 list.unshift({ name, url, rate, desc });
             } else {
-                if(prompt("관리자 암호를 입력하세요.") !== ADMIN_PW) return alert("암호가 틀렸습니다.");
+                if(prompt("암호 입력") !== ADMIN_PW) return alert("암호 오류");
                 list[editIndex] = { name, url, rate, desc };
             }
             localStorage.setItem(currentTargetKey, JSON.stringify(list));
@@ -255,7 +254,7 @@
                     ${m.url ? `<img src="${m.url}" onerror="this.style.display='none'">` : ''}
                     <div class="item-info">
                         <h3>${m.name}</h3>
-                        ${m.rate ? `<div class="rating">${m.rate}</div>` : ''}
+                        ${m.rate ? `<div style="color:#f1c40f;">${m.rate}</div>` : ''}
                         <p>${m.desc}</p>
                     </div>
                     <div class="btn-group">
@@ -267,11 +266,11 @@
         }
 
         function delItem(key, i) {
-            if(prompt("관리자 암호") === ADMIN_PW) {
+            if(prompt("삭제 암호") === ADMIN_PW) {
                 const list = JSON.parse(localStorage.getItem(key));
                 list.splice(i, 1); localStorage.setItem(key, JSON.stringify(list));
                 loadItems(key);
-            } else { alert("암호가 틀렸습니다."); }
+            } else { alert("암호 오류"); }
         }
 
         function addGuestbook() {
@@ -285,11 +284,21 @@
             const entries = JSON.parse(localStorage.getItem('my-gb-v2') || '[]');
             document.getElementById('guestbook-list').innerHTML = entries.map((e, i) => `
                 <div class="guest-entry">
-                    <span style="position:absolute; top:10px; right:15px; cursor:pointer; color:red;" onclick="delGuestbook(${i})">삭제</span>
+                    <div class="btn-group">
+                        <span class="icon-btn" onclick="editGuestbook(${i})">✎</span>
+                        <span class="icon-btn" onclick="delGuestbook(${i})">×</span>
+                    </div>
                     <strong>익명</strong>: ${e.text}<br><small style="color:#999">${e.date}</small>
                 </div>`).join('');
         }
-        function delGuestbook(i) { if(prompt("암호") === ADMIN_PW) { const list = JSON.parse(localStorage.getItem('my-gb-v2')); list.splice(i,1); localStorage.setItem('my-gb-v2', JSON.stringify(list)); loadGuestbook(); } }
+        function editGuestbook(i) {
+            if(prompt("수정 암호") === ADMIN_PW) {
+                const list = JSON.parse(localStorage.getItem('my-gb-v2'));
+                const newText = prompt("메시지 수정:", list[i].text);
+                if(newText) { list[i].text = newText; localStorage.setItem('my-gb-v2', JSON.stringify(list)); loadGuestbook(); }
+            }
+        }
+        function delGuestbook(i) { if(prompt("삭제 암호") === ADMIN_PW) { const list = JSON.parse(localStorage.getItem('my-gb-v2')); list.splice(i,1); localStorage.setItem('my-gb-v2', JSON.stringify(list)); loadGuestbook(); } }
     </script>
 </body>
 </html>
