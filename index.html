@@ -33,20 +33,28 @@
             background: rgba(236, 230, 204, 0.9); display: flex; justify-content: center; align-items: center; z-index: 1100;
         }
         .back-btn { color: #6B8E23; cursor: pointer; text-decoration: underline; font-weight: bold; font-size: 1.1rem; }
-        .scroll-area { width: 100%; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding-bottom: 80px; }
+        .scroll-area { width: 100%; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding-bottom: 100px; }
 
-        /* 카드 및 메모 스타일 */
+        /* 영화 전용: 크고 시각적인 카드 */
+        .movie-grid { width: 95%; max-width: 800px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+        .movie-card { background: white; border-radius: 15px; overflow: hidden; color: #333; box-shadow: 0 10px 20px rgba(0,0,0,0.1); position: relative; display: flex; flex-direction: column; }
+        .movie-card img { width: 100%; height: 200px; object-fit: cover; }
+        .movie-card-content { padding: 20px; text-align: left; }
+        .movie-card-content h3 { margin: 0 0 10px 0; font-size: 1.4rem; color: #2c2a24; }
+        .movie-card-content .rating { color: #f1c40f; font-size: 1.1rem; margin-bottom: 8px; }
+        .movie-card-content p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.5; }
+
+        /* 일반 메모/추천 카드 */
         .item-grid { width: 90%; max-width: 600px; display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
         .item-card { background: white; border-radius: 12px; padding: 15px; display: flex; gap: 15px; align-items: center; position: relative; color: #333; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .item-card img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
         .item-info { flex: 1; text-align: left; }
-        .item-info h3 { margin: 0; font-size: 1.1rem; color: #2c2a24; }
-        .item-info p { margin: 5px 0 0; font-size: 0.85rem; color: #666; white-space: pre-wrap; }
+        
         .btn-group { position: absolute; top: 10px; right: 10px; display: flex; gap: 10px; }
-        .icon-btn { cursor: pointer; font-size: 0.9rem; font-weight: bold; opacity: 0.5; color: #333; }
+        .icon-btn { cursor: pointer; font-size: 1rem; opacity: 0.5; color: #333; font-weight: bold; }
         .icon-btn:hover { opacity: 1; color: #6B8E23; }
 
-        /* 영화 탭 복구 (색상변화 및 큰 글씨) */
+        /* 영화 탭 분할 섹션 */
         #movie.content-section { flex-direction: row; padding: 0; }
         .movie-split { width: 50%; height: 100%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.4s; }
         .split-left { background: #5B5956; color: #E2DEDB; }
@@ -54,11 +62,12 @@
         .split-right { background: #E2DEDB; color: #5B5956; }
         .split-right:hover { background: #E9A4C8 !important; color: #E2DEDB !important; }
         .movie-split h2 { font-size: 4rem; pointer-events: none; }
+        
         .detail-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; z-index: 1050; overflow: hidden; }
         .detail-layer.active { display: flex; }
 
-        /* 방명록 카드 스타일 */
-        .guest-entry { background: white !important; color: #2c2a24; padding: 15px; border-radius: 12px; margin-bottom: 10px; position: relative; border-left: 6px solid #6B8E23; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: left; width: 100%; box-sizing: border-box; }
+        /* 방명록 스타일 */
+        .guest-entry { background: white; color: #2c2a24; padding: 15px; border-radius: 12px; margin-bottom: 10px; position: relative; border-left: 6px solid #6B8E23; text-align: left; width: 100%; box-sizing: border-box; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
 
         /* 인트로 */
         #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #3d2b1f; display: flex; justify-content: center; align-items: center; z-index: 3000; cursor: pointer; flex-direction: column; }
@@ -101,7 +110,7 @@
         <div class="scroll-area">
             <iframe src="https://www.tradingview-widget.com/embed-widget/timeline/?locale=kr" style="width: 90%; height: 500px; border: none; border-radius: 15px; flex-shrink: 0;"></iframe>
             <div style="width:90%; max-width:600px; text-align:left; color:#2c2a24; font-weight:bold; margin-top:20px;">경제 메모</div>
-            <div onclick="openItemModal('memo-economy')" style="cursor:pointer; color:#6B8E23; margin: 10px 0; font-weight: bold;">+ 메모 추가</div>
+            <div onclick="openItemModal('memo-economy')" style="cursor:pointer; color:#6B8E23; margin: 10px 0;">+ 메모 추가</div>
             <div class="item-grid" id="grid-memo-economy"></div>
         </div>
         <div class="fixed-footer"><span class="back-btn" onclick="showHome()">뒤로가기</span></div>
@@ -112,7 +121,7 @@
         <div class="scroll-area">
             <iframe src="https://www.tradingview-widget.com/embed-widget/market-overview/?locale=kr" style="width: 90%; height: 500px; border: none; border-radius: 15px; flex-shrink: 0;"></iframe>
             <div style="width:90%; max-width:600px; text-align:left; color:#2c2a24; font-weight:bold; margin-top:20px;">주식 메모</div>
-            <div onclick="openItemModal('memo-stocks')" style="cursor:pointer; color:#6B8E23; margin: 10px 0; font-weight: bold;">+ 메모 추가</div>
+            <div onclick="openItemModal('memo-stocks')" style="cursor:pointer; color:#6B8E23; margin: 10px 0;">+ 메모 추가</div>
             <div class="item-grid" id="grid-memo-stocks"></div>
         </div>
         <div class="fixed-footer"><span class="back-btn" onclick="showHome()">뒤로가기</span></div>
@@ -121,7 +130,7 @@
     <div id="music" class="content-section">
         <h1>내 플리</h1>
         <div class="scroll-area">
-            <iframe src="http://googleusercontent.com/spotify.com/7" width="85%" height="500" frameBorder="0" allow="autoplay; encrypted-media; fullscreen" style="border-radius:12px; margin-bottom:30px; flex-shrink: 0;"></iframe>
+            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM3M" width="85%" height="500" frameborder="0" allowtransparency="true" allow="encrypted-media" style="border-radius:12px; margin-bottom:30px; flex-shrink: 0;"></iframe>
             <div style="width:90%; max-width:600px; text-align:left; color:#2c2a24; font-weight:bold; font-size:1.2rem; margin-bottom:10px;">추천</div>
             <div onclick="openItemModal('music-list')" style="cursor:pointer; font-size:1.5rem; color:#6B8E23; border:2px solid #6B8E23; width:40px; height:40px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-bottom:20px;">+</div>
             <div class="item-grid" id="grid-music-list"></div>
@@ -138,8 +147,8 @@
     <div id="layer-watched" class="detail-layer" style="background:#8FBFD6;">
         <h1 style="color:#5B5956 !important;">본! 영화 목록</h1>
         <div class="scroll-area">
-            <div onclick="openItemModal('movies-watched')" style="cursor:pointer; font-size:1.5rem; color:#5B5956; border:2px solid #5B5956; width:40px; height:40px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-bottom:20px;">+</div>
-            <div class="item-grid" id="grid-movies-watched"></div>
+            <div onclick="openItemModal('movies-watched')" style="cursor:pointer; font-size:1.5rem; color:#5B5956; border:2px solid #5B5956; width:50px; height:50px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-bottom:30px; background: white;">+</div>
+            <div class="movie-grid" id="grid-movies-watched"></div>
         </div>
         <div class="fixed-footer" style="background:#8FBFD6;"><span class="back-btn" onclick="closeMovieLayer('watched')" style="color:#5B5956">닫기</span></div>
     </div>
@@ -147,8 +156,8 @@
     <div id="layer-will" class="detail-layer" style="background:#E9A4C8;">
         <h1 style="color:#E2DEDB !important;">볼! 영화 목록</h1>
         <div class="scroll-area">
-            <div onclick="openItemModal('movies-will')" style="cursor:pointer; font-size:1.5rem; color:#E2DEDB; border:2px solid #E2DEDB; width:40px; height:40px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-bottom:20px;">+</div>
-            <div class="item-grid" id="grid-movies-will"></div>
+            <div onclick="openItemModal('movies-will')" style="cursor:pointer; font-size:1.5rem; color:#E2DEDB; border:2px solid #E2DEDB; width:50px; height:50px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-bottom:30px; background: white;">+</div>
+            <div class="movie-grid" id="grid-movies-will"></div>
         </div>
         <div class="fixed-footer" style="background:#E9A4C8;"><span class="back-btn" onclick="closeMovieLayer('will')" style="color:#E2DEDB">닫기</span></div>
     </div>
@@ -167,11 +176,11 @@
 
     <div id="item-modal" class="modal">
         <div class="modal-content">
-            <h3 id="modal-title">내용 추가</h3>
-            <input type="text" id="in-name" placeholder="제목/내용">
-            <input type="text" id="in-url" placeholder="이미지 URL">
-            <input type="text" id="in-rate" placeholder="별점 (예: ★★★★★)">
-            <textarea id="in-desc" placeholder="상세 설명"></textarea>
+            <h3 id="modal-title">정보 입력</h3>
+            <input type="text" id="in-name" placeholder="제목/이름">
+            <input type="text" id="in-url" placeholder="이미지(포스터) URL">
+            <input type="text" id="in-rate" placeholder="별점 (예: ★★★★☆)">
+            <textarea id="in-desc" placeholder="내용 및 한 줄 평" rows="4"></textarea>
             <button onclick="saveItem()" style="width:100%; padding:12px; background:#6B8E23; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">저장하기</button>
             <button onclick="closeItemModal()" style="width:100%; padding:10px; background:#ccc; border:none; border-radius:8px; margin-top:5px; cursor:pointer;">취소</button>
         </div>
@@ -229,18 +238,14 @@
 
         function saveItem() {
             const name = document.getElementById('in-name').value;
-            const url = document.getElementById('in-url').value;
+            const url = document.getElementById('in-url').value || 'https://via.placeholder.com/400x200?text=No+Image';
             const rate = document.getElementById('in-rate').value;
             const desc = document.getElementById('in-desc').value;
-            if(!name) return alert("내용을 입력해주세요.");
+            if(!name) return alert("제목을 입력해주세요.");
 
             const list = JSON.parse(localStorage.getItem(currentTargetKey) || '[]');
-            if(editIndex === -1) {
-                list.unshift({ name, url, rate, desc });
-            } else {
-                if(prompt("암호 입력") !== ADMIN_PW) return alert("암호 오류");
-                list[editIndex] = { name, url, rate, desc };
-            }
+            if(editIndex === -1) { list.unshift({ name, url, rate, desc }); }
+            else { if(prompt("수정 암호") !== ADMIN_PW) return alert("암호 오류"); list[editIndex] = { name, url, rate, desc }; }
             localStorage.setItem(currentTargetKey, JSON.stringify(list));
             loadItems(currentTargetKey); closeItemModal();
         }
@@ -249,20 +254,40 @@
             const list = JSON.parse(localStorage.getItem(key) || '[]');
             const grid = document.getElementById('grid-' + key);
             if(!grid) return;
-            grid.innerHTML = list.map((m, i) => `
-                <div class="item-card">
-                    ${m.url ? `<img src="${m.url}" onerror="this.style.display='none'">` : ''}
-                    <div class="item-info">
-                        <h3>${m.name}</h3>
-                        ${m.rate ? `<div style="color:#f1c40f;">${m.rate}</div>` : ''}
-                        <p>${m.desc}</p>
+
+            // 영화 탭인 경우 다르게 렌더링
+            if(key.includes('movies')) {
+                grid.innerHTML = list.map((m, i) => `
+                    <div class="movie-card">
+                        <img src="${m.url}" onerror="this.src='https://via.placeholder.com/400x200?text=Movie+Poster'">
+                        <div class="movie-card-content">
+                            <h3>${m.name}</h3>
+                            ${m.rate ? `<div class="rating">${m.rate}</div>` : ''}
+                            <p>${m.desc}</p>
+                        </div>
+                        <div class="btn-group">
+                            <span class="icon-btn" onclick="openItemModal('${key}', ${i})">✎</span>
+                            <span class="icon-btn" onclick="delItem('${key}', ${i})">×</span>
+                        </div>
                     </div>
-                    <div class="btn-group">
-                        <span class="icon-btn" onclick="openItemModal('${key}', ${i})">✎</span>
-                        <span class="icon-btn" onclick="delItem('${key}', ${i})">×</span>
+                `).join('');
+            } else {
+                // 일반 메모/추천 렌더링
+                grid.innerHTML = list.map((m, i) => `
+                    <div class="item-card">
+                        ${m.url ? `<img src="${m.url}" onerror="this.style.display='none'">` : ''}
+                        <div class="item-info">
+                            <h3 style="margin:0;">${m.name}</h3>
+                            ${m.rate ? `<div style="color:#f1c40f; font-size:0.8rem;">${m.rate}</div>` : ''}
+                            <p style="margin:5px 0 0; color:#666;">${m.desc}</p>
+                        </div>
+                        <div class="btn-group">
+                            <span class="icon-btn" onclick="openItemModal('${key}', ${i})">✎</span>
+                            <span class="icon-btn" onclick="delItem('${key}', ${i})">×</span>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+            }
         }
 
         function delItem(key, i) {
@@ -285,18 +310,10 @@
             document.getElementById('guestbook-list').innerHTML = entries.map((e, i) => `
                 <div class="guest-entry">
                     <div class="btn-group">
-                        <span class="icon-btn" onclick="editGuestbook(${i})">✎</span>
                         <span class="icon-btn" onclick="delGuestbook(${i})">×</span>
                     </div>
                     <strong>익명</strong>: ${e.text}<br><small style="color:#999">${e.date}</small>
                 </div>`).join('');
-        }
-        function editGuestbook(i) {
-            if(prompt("수정 암호") === ADMIN_PW) {
-                const list = JSON.parse(localStorage.getItem('my-gb-v2'));
-                const newText = prompt("메시지 수정:", list[i].text);
-                if(newText) { list[i].text = newText; localStorage.setItem('my-gb-v2', JSON.stringify(list)); loadGuestbook(); }
-            }
         }
         function delGuestbook(i) { if(prompt("삭제 암호") === ADMIN_PW) { const list = JSON.parse(localStorage.getItem('my-gb-v2')); list.splice(i,1); localStorage.setItem('my-gb-v2', JSON.stringify(list)); loadGuestbook(); } }
     </script>
