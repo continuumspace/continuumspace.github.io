@@ -5,49 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Continuum Space</title>
     <style>
-        body { margin: 0; background-color: #ece6cc; color: #f5f1e4; font-family: 'Pretendard', sans-serif; transition: background-color 0.1s linear; }
+        /* 기본 레이아웃 */
+        body { margin: 0; background-color: #ece6cc; color: #f5f1e4; font-family: 'Pretendard', sans-serif; transition: background-color 0.1s linear; overflow-x: hidden; }
         .container { text-align: center; display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; z-index: 10; } 
         #home-main h1 { font-size: 3.5rem; letter-spacing: -1px; margin-bottom: 10px; color: #f5f1e4; }
         #home-main p { font-size: 1.5rem; margin-bottom: 30px; font-weight: bold; color: #f5f1e4; }
         .links a { text-decoration: none; color: #6B8E23; border: 2px solid #6B8E23; padding: 12px 25px; border-radius: 50px; transition: 0.3s; margin: 5px; font-weight: bold; cursor: pointer; display: inline-block; }
         .links a:hover { background: #6B8E23; color: #2f3a2e; }
 
+        /* 탭 공통 스타일 */
         .content-section { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: #ece6cc !important; z-index: 1000; flex-direction: column; align-items: center; overflow: hidden; }
         .content-section.active { display: flex; }
         .content-section h1 { color: #2c2a24 !important; margin-top: 40px; margin-bottom: 20px; font-size: 2.2rem; }
         
-        .fixed-footer { position: absolute; bottom: 0; left: 0; width: 100%; height: 70px; background: rgba(236, 230, 204, 0.9); display: flex; justify-content: center; align-items: center; z-index: 1100; }
+        .fixed-footer { position: absolute; bottom: 0; left: 0; width: 100%; height: 70px; background: rgba(236, 230, 204, 0.95); display: flex; justify-content: center; align-items: center; z-index: 1100; border-top: 1px solid rgba(0,0,0,0.05); }
         .back-btn { color: #6B8E23; cursor: pointer; text-decoration: underline; font-weight: bold; font-size: 1.1rem; }
-        .scroll-area { width: 100%; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding-bottom: 80px; }
+        .scroll-area { width: 100%; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding-bottom: 100px; }
 
-        /* 메모 및 카드 공통 스타일 */
+        /* 카드 및 리스트 스타일 */
         .item-grid { width: 90%; max-width: 600px; display: flex; flex-direction: column; gap: 15px; margin-top: 15px; }
-        .item-card { background: white; border-radius: 12px; padding: 15px; display: flex; gap: 15px; align-items: center; position: relative; color: #333; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .item-card img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; }
-        .item-info { flex: 1; text-align: left; }
+        .item-card { background: white; border-radius: 12px; padding: 15px; display: flex; gap: 15px; align-items: center; position: relative; color: #333; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .item-card img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+        .item-info { flex: 1; text-align: left; overflow: hidden; }
         .item-info h3 { margin: 0; font-size: 1.1rem; color: #2c2a24; }
-        .item-info p { margin: 5px 0 0; font-size: 0.85rem; color: #666; white-space: pre-wrap; }
-        .btn-group { position: absolute; top: 10px; right: 10px; display: flex; gap: 8px; }
-        .icon-btn { cursor: pointer; font-size: 0.9rem; font-weight: bold; opacity: 0.4; }
+        .item-info p { margin: 5px 0 0; font-size: 0.85rem; color: #666; line-height: 1.4; word-break: break-all; }
+        .btn-group { position: absolute; top: 10px; right: 10px; display: flex; gap: 10px; }
+        .icon-btn { cursor: pointer; font-size: 1rem; opacity: 0.3; transition: 0.2s; }
         .icon-btn:hover { opacity: 1; color: #6B8E23; }
 
-        /* 영화 분할 */
+        /* 영화 탭 특수 레이아웃 */
         #movie.content-section { flex-direction: row; padding: 0; }
         .movie-split { width: 50%; height: 100%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.4s; }
         .split-left { background: #5B5956; color: #E2DEDB; }
+        .split-left:hover { background: #8FBFD6 !important; color: #5B5956 !important; }
         .split-right { background: #E2DEDB; color: #5B5956; }
+        .split-right:hover { background: #E9A4C8 !important; color: #E2DEDB !important; }
+        .movie-split h2 { font-size: 4rem; pointer-events: none; }
+        
         .detail-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; z-index: 1050; overflow: hidden; }
         .detail-layer.active { display: flex; }
 
-        /* 인트로 깜빡이 */
+        /* 인트로 애니메이션 */
         #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #3d2b1f; display: flex; justify-content: center; align-items: center; z-index: 3000; cursor: pointer; flex-direction: column; }
         #intro-screen h2 { color: #6B8E23; font-size: 2rem; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
-        /* 모달 */
+        /* 모달 스타일 */
         .modal { display: none; position: fixed; z-index: 4000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 25px; border-radius: 15px; width: 320px; color: #333; }
-        .modal-content input, .modal-content textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .modal-content { background: white; padding: 25px; border-radius: 15px; width: 320px; color: #333; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .modal-content input, .modal-content textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -79,8 +85,8 @@
         <h1>경제 뉴스</h1>
         <div class="scroll-area">
             <iframe src="https://www.tradingview-widget.com/embed-widget/timeline/?locale=kr" style="width: 90%; height: 450px; border: none; border-radius: 15px;"></iframe>
-            <div style="width:90%; max-width:600px; text-align:left; color:#2c2a24; font-weight:bold; margin-top:30px;">경제 메모</div>
-            <div onclick="openItemModal('memo-economy')" style="cursor:pointer; font-size:1.2rem; color:#6B8E23; margin: 10px 0;">+ 메모 남기기</div>
+            <div style="width:90%; max-width:600px; text-align:left; color:#2c2a24; font-weight:bold; margin-top:40px; border-top: 1px solid #ccc; padding-top: 20px;">경제 메모</div>
+            <div onclick="openItemModal('memo-economy')" style="cursor:pointer; color:#6B8E23; margin: 15px 0; font-weight: bold;">+ 새로운 메모 작성</div>
             <div class="item-grid" id="grid-memo-economy"></div>
         </div>
         <div class="fixed-footer"><span class="back-btn" onclick="showHome()">뒤로가기</span></div>
@@ -90,8 +96,8 @@
         <h1>주식 시세</h1>
         <div class="scroll-area">
             <iframe src="https://www.tradingview-widget.com/embed-widget/market-overview/?locale=kr" style="width: 90%; height: 450px; border: none; border-radius: 15px;"></iframe>
-            <div style="width:90%; max-width:600px; text-align:left; color:#2c2a24; font-weight:bold; margin-top:30px;">주식 메모</div>
-            <div onclick="openItemModal('memo-stocks')" style="cursor:pointer; font-size:1.2rem; color:#6B8E23; margin: 10px 0;">+ 메모 남기기</div>
+            <div style="width:90%; max-width:600px; text-align:left; color:#2c2a24; font-weight:bold; margin-top:40px; border-top: 1px solid #ccc; padding-top: 20px;">주식 메모</div>
+            <div onclick="openItemModal('memo-stocks')" style="cursor:pointer; color:#6B8E23; margin: 15px 0; font-weight: bold;">+ 새로운 메모 작성</div>
             <div class="item-grid" id="grid-memo-stocks"></div>
         </div>
         <div class="fixed-footer"><span class="back-btn" onclick="showHome()">뒤로가기</span></div>
@@ -100,9 +106,9 @@
     <div id="music" class="content-section">
         <h1>내 플리</h1>
         <div class="scroll-area">
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM3M" width="85%" height="352" frameBorder="0" allow="autoplay; encrypted-media; fullscreen" style="border-radius:12px; margin-bottom:30px;"></iframe>
+            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1E37yU3e7fOshm" width="85%" height="352" frameBorder="0" allow="autoplay; encrypted-media; fullscreen" style="border-radius:12px; margin-bottom:30px;"></iframe>
             <div style="width:90%; max-width:600px; text-align:left; color:#2c2a24; font-weight:bold; font-size:1.2rem; margin-bottom:10px;">추천</div>
-            <div onclick="openItemModal('music-list')" style="cursor:pointer; font-size:1.5rem; color:#6B8E23; border:2px solid #6B8E23; width:40px; height:40px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-bottom:20px;">+</div>
+            <div onclick="openItemModal('music-list')" style="cursor:pointer; font-size:1.5rem; color:#6B8E23; border:2px solid #6B8E23; width:45px; height:45px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-bottom:20px;">+</div>
             <div class="item-grid" id="grid-music-list"></div>
         </div>
         <div class="fixed-footer"><span class="back-btn" onclick="showHome()">뒤로가기</span></div>
@@ -111,23 +117,34 @@
     <div id="movie" class="content-section">
         <div class="movie-split split-left" onclick="openMovieLayer('watched')"><h2>본! 영화</h2></div>
         <div class="movie-split split-right" onclick="openMovieLayer('will')"><h2>볼! 영화</h2></div>
-        <div class="fixed-footer" style="background:transparent;"><span class="back-btn" onclick="showHome()" style="background:rgba(0,0,0,0.2); padding:5px 20px; border-radius:20px; color:white;">뒤로가기</span></div>
+        <div class="fixed-footer" style="background:transparent; border:none;"><span class="back-btn" onclick="showHome()" style="background:rgba(0,0,0,0.3); padding:8px 25px; border-radius:50px; color:white; text-decoration:none;">뒤로가기</span></div>
     </div>
+
     <div id="layer-watched" class="detail-layer" style="background:#8FBFD6;">
         <h1 style="color:#5B5956 !important;">본! 영화 목록</h1>
-        <div class="scroll-area"><div onclick="openItemModal('movies-watched')" style="cursor:pointer; font-size:1.5rem; color:#5B5956; border:2px solid #5B5956; width:40px; height:40px; border-radius:50%; display:flex; justify-content:center; align-items:center;">+</div><div class="item-grid" id="grid-movies-watched"></div></div>
+        <div class="scroll-area">
+            <div onclick="openItemModal('movies-watched')" style="cursor:pointer; font-size:1.5rem; color:#5B5956; border:2px solid #5B5956; width:45px; height:45px; border-radius:50%; display:flex; justify-content:center; align-items:center;">+</div>
+            <div class="item-grid" id="grid-movies-watched"></div>
+        </div>
         <div class="fixed-footer" style="background:#8FBFD6;"><span class="back-btn" onclick="closeMovieLayer('watched')" style="color:#5B5956">닫기</span></div>
     </div>
+
     <div id="layer-will" class="detail-layer" style="background:#E9A4C8;">
         <h1 style="color:#E2DEDB !important;">볼! 영화 목록</h1>
-        <div class="scroll-area"><div onclick="openItemModal('movies-will')" style="cursor:pointer; font-size:1.5rem; color:#E2DEDB; border:2px solid #E2DEDB; width:40px; height:40px; border-radius:50%; display:flex; justify-content:center; align-items:center;">+</div><div class="item-grid" id="grid-movies-will"></div></div>
+        <div class="scroll-area">
+            <div onclick="openItemModal('movies-will')" style="cursor:pointer; font-size:1.5rem; color:#E2DEDB; border:2px solid #E2DEDB; width:45px; height:45px; border-radius:50%; display:flex; justify-content:center; align-items:center;">+</div>
+            <div class="item-grid" id="grid-movies-will"></div>
+        </div>
         <div class="fixed-footer" style="background:#E9A4C8;"><span class="back-btn" onclick="closeMovieLayer('will')" style="color:#E2DEDB">닫기</span></div>
     </div>
 
     <div id="guestbook" class="content-section">
         <h1>방명록</h1>
         <div class="scroll-area">
-            <div style="width:85%; max-width:500px; margin-bottom:20px;"><input type="text" id="gb-input" placeholder="메시지 입력" style="width:100%; padding:15px; border-radius:10px; border:1px solid #ccc;"><button onclick="addGuestbook()" style="width:100%; padding:15px; background:#6B8E23; color:white; border:none; border-radius:10px; margin-top:10px; font-weight:bold;">등록</button></div>
+            <div style="width:85%; max-width:500px; margin-bottom:25px;">
+                <input type="text" id="gb-input" placeholder="따뜻한 한마디를 남겨주세요" style="width:100%; padding:15px; border-radius:10px; border:1px solid #ccc; box-sizing:border-box;">
+                <button onclick="addGuestbook()" style="width:100%; padding:15px; background:#6B8E23; color:white; border:none; border-radius:10px; margin-top:10px; font-weight:bold; cursor:pointer;">등록하기</button>
+            </div>
             <div id="guestbook-list" style="width:85%; max-width:500px;"></div>
         </div>
         <div class="fixed-footer"><span class="back-btn" onclick="showHome()">뒤로가기</span></div>
@@ -135,13 +152,13 @@
 
     <div id="item-modal" class="modal">
         <div class="modal-content">
-            <h3 id="modal-title">항목 추가</h3>
-            <input type="text" id="in-name" placeholder="제목/메모 요약">
-            <input type="text" id="in-url" placeholder="이미지 URL (메모는 생략 가능)">
-            <input type="text" id="in-rate" placeholder="별점 (선택)">
-            <textarea id="in-desc" placeholder="내용을 입력하세요" rows="4"></textarea>
+            <h3 id="modal-title" style="margin-top:0;">항목 추가</h3>
+            <input type="text" id="in-name" placeholder="제목">
+            <input type="text" id="in-url" placeholder="이미지 URL (선택)">
+            <input type="text" id="in-rate" placeholder="별점 (예: ★★★★☆)">
+            <textarea id="in-desc" placeholder="내용 또는 한 줄 평" rows="4"></textarea>
             <button onclick="saveItem()" style="width:100%; padding:12px; background:#6B8E23; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">저장하기</button>
-            <button onclick="closeItemModal()" style="width:100%; padding:10px; background:#ccc; border:none; border-radius:8px; margin-top:5px; cursor:pointer;">취소</button>
+            <button onclick="closeItemModal()" style="width:100%; padding:10px; background:#ccc; border:none; border-radius:8px; margin-top:8px; cursor:pointer;">취소</button>
         </div>
     </div>
 
@@ -150,6 +167,7 @@
         let currentTargetKey = ""; 
         let editIndex = -1;
 
+        // 인트로 & 스크롤 제어
         function startScrollPage() { document.getElementById('intro-screen').style.display='none'; document.getElementById('scroll-page').style.display='block'; window.scrollTo(0,0); }
         window.onscroll = function() {
             const scrollPage = document.getElementById('scroll-page');
@@ -164,6 +182,7 @@
             }
         };
 
+        // 네비게이션
         function showContent(id) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -173,17 +192,23 @@
             if(id === 'music') loadItems('music-list');
             if(id === 'guestbook') loadGuestbook();
         }
-        function showHome() { document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active')); document.body.style.overflow='auto'; closeMovieLayer('watched'); closeMovieLayer('will'); }
+        function showHome() { 
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active')); 
+            document.querySelectorAll('.detail-layer').forEach(l => l.classList.remove('active'));
+            document.body.style.overflow='auto'; 
+        }
+
         function openMovieLayer(type) { document.getElementById('layer-' + type).classList.add('active'); loadItems('movies-' + type); }
         function closeMovieLayer(type) { document.getElementById('layer-' + type).classList.remove('active'); }
 
+        // 아이템 로직 (메모, 영화, 추천 공용)
         function openItemModal(key, index = -1) {
             currentTargetKey = key; editIndex = index;
             document.getElementById('modal-title').innerText = index === -1 ? "새 항목 추가" : "항목 수정";
             if(index !== -1) {
                 const item = JSON.parse(localStorage.getItem(key))[index];
                 document.getElementById('in-name').value = item.name;
-                document.getElementById('in-url').value = item.url;
+                document.getElementById('in-url').value = item.url || "";
                 document.getElementById('in-rate').value = item.rate || "";
                 document.getElementById('in-desc').value = item.desc;
             } else {
@@ -196,7 +221,7 @@
 
         function saveItem() {
             const name = document.getElementById('in-name').value;
-            const url = document.getElementById('in-url').value || '';
+            const url = document.getElementById('in-url').value;
             const rate = document.getElementById('in-rate').value;
             const desc = document.getElementById('in-desc').value;
             if(!name) return alert("제목을 입력해주세요.");
@@ -205,7 +230,7 @@
             if(editIndex === -1) {
                 list.unshift({ name, url, rate, desc });
             } else {
-                if(prompt("관리자 암호를 입력하세요.") !== ADMIN_PW) return alert("암호가 틀렸습니다.");
+                if(prompt("수정하려면 암호를 입력하세요.") !== ADMIN_PW) return alert("암호가 틀렸습니다.");
                 list[editIndex] = { name, url, rate, desc };
             }
             localStorage.setItem(currentTargetKey, JSON.stringify(list));
@@ -221,7 +246,7 @@
                     ${m.url ? `<img src="${m.url}" onerror="this.style.display='none'">` : ''}
                     <div class="item-info">
                         <h3>${m.name}</h3>
-                        ${m.rate ? `<div style="color:#f1c40f">${m.rate}</div>` : ''}
+                        ${m.rate ? `<div style="color:#f1c40f; font-size:0.8rem; margin:2px 0;">${m.rate}</div>` : ''}
                         <p>${m.desc}</p>
                     </div>
                     <div class="btn-group">
@@ -233,29 +258,34 @@
         }
 
         function delItem(key, i) {
-            if(prompt("관리자 암호") === ADMIN_PW) {
+            if(prompt("삭제하려면 암호를 입력하세요.") === ADMIN_PW) {
                 const list = JSON.parse(localStorage.getItem(key));
                 list.splice(i, 1); localStorage.setItem(key, JSON.stringify(list));
                 loadItems(key);
             } else { alert("암호 오류"); }
         }
 
+        // 방명록 로직
         function addGuestbook() {
             const input = document.getElementById('gb-input'); if(!input.value) return;
-            const list = JSON.parse(localStorage.getItem('my-gb-final-v3') || '[]');
+            const list = JSON.parse(localStorage.getItem('my-gb-final-v4') || '[]');
             list.unshift({ text: input.value, date: new Date().toLocaleString() });
-            localStorage.setItem('my-gb-final-v3', JSON.stringify(list));
+            localStorage.setItem('my-gb-final-v4', JSON.stringify(list));
             input.value = ''; loadGuestbook();
         }
         function loadGuestbook() {
-            const entries = JSON.parse(localStorage.getItem('my-gb-final-v3') || '[]');
+            const entries = JSON.parse(localStorage.getItem('my-gb-final-v4') || '[]');
             document.getElementById('guestbook-list').innerHTML = entries.map((e, i) => `
-                <div class="guest-entry">
-                    <span style="position:absolute; top:10px; right:15px; cursor:pointer; color:red;" onclick="delGuestbook(${i})">삭제</span>
-                    <strong>익명</strong>: ${e.text}<br><small style="color:#999">${e.date}</small>
+                <div class="item-card" style="margin-bottom:10px;">
+                    <div class="item-info">
+                        <strong>익명</strong><br>
+                        <p>${e.text}</p>
+                        <small style="color:#999; font-size:0.7rem;">${e.date}</small>
+                    </div>
+                    <span style="cursor:pointer; color:#e74c3c; font-size:0.8rem; font-weight:bold;" onclick="delGuestbook(${i})">삭제</span>
                 </div>`).join('');
         }
-        function delGuestbook(i) { if(prompt("암호") === ADMIN_PW) { const list = JSON.parse(localStorage.getItem('my-gb-final-v3')); list.splice(i,1); localStorage.setItem('my-gb-final-v3', JSON.stringify(list)); loadGuestbook(); } }
+        function delGuestbook(i) { if(prompt("삭제 암호") === ADMIN_PW) { const list = JSON.parse(localStorage.getItem('my-gb-final-v4')); list.splice(i,1); localStorage.setItem('my-gb-final-v4', JSON.stringify(list)); loadGuestbook(); } }
     </script>
 </body>
 </html>
