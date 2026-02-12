@@ -6,66 +6,54 @@
     <title>Continuum Space</title>
     <style>
         body { 
-            margin: 0; 
-            background-color: #ece6cc; 
-            color: #f5f1e4; 
-            font-family: 'Pretendard', sans-serif; 
-            transition: background-color 0.1s linear; 
+            margin: 0; background-color: #ece6cc; color: #f5f1e4; 
+            font-family: 'Pretendard', sans-serif; transition: background-color 0.1s linear; 
         }
-        
         .container { 
             text-align: center; display: none; position: fixed; 
             top: 50%; left: 50%; transform: translate(-50%, -50%); 
             width: 100%; z-index: 10;
         } 
-        
-        #home-main h1, #home-main p { color: #f5f1e4; margin: 0; }
-        #home-main h1 { font-size: 3.5rem; letter-spacing: -1px; margin-bottom: 10px; }
-        #home-main p { font-size: 1.5rem; margin-bottom: 30px; font-weight: bold; }
-        
+        #home-main h1 { font-size: 3.5rem; letter-spacing: -1px; margin-bottom: 10px; color: #f5f1e4; }
+        #home-main p { font-size: 1.5rem; margin-bottom: 30px; font-weight: bold; color: #f5f1e4; }
         .links a { text-decoration: none; color: #6B8E23; border: 2px solid #6B8E23; padding: 12px 25px; border-radius: 50px; transition: 0.3s; margin: 5px; font-weight: bold; cursor: pointer; display: inline-block; }
         .links a:hover { background: #6B8E23; color: #2f3a2e; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -30%); } to { opacity: 1; transform: translate(-50%, -50%); } }
 
-        /* --- 탭 내부 공통 스타일 --- */
+        /* 탭 공통 */
         .content-section { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             background-color: #ece6cc !important; z-index: 1000; flex-direction: column;
             justify-content: flex-start; align-items: center; padding-top: 50px; overflow-y: auto;
-            font-family: 'Pretendard', sans-serif !important;
         }
         .content-section.active { display: flex; }
         .content-section h1 { color: #2c2a24 !important; margin-bottom: 20px; font-size: 2rem; }
-        
-        .back-btn { margin: 30px 0; color: #6B8E23; cursor: pointer; text-decoration: underline; font-weight: bold; font-size: 1.1rem; }
+        .back-btn { margin: 30px 0; color: #6B8E23; cursor: pointer; text-decoration: underline; font-weight: bold; }
 
-        /* --- 영화 카드 스타일 --- */
-        .movie-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; width: 80%; max-width: 900px; }
-        .movie-card { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: #2c2a24; }
-        .movie-card img { width: 100%; border-radius: 10px; margin-bottom: 10px; }
-        .movie-card h3 { margin: 5px 0; font-size: 1.1rem; }
-        .movie-card .rating { color: #f1c40f; font-size: 1rem; }
-        .movie-card .review { font-size: 0.9rem; color: #666; margin-top: 5px; }
+        /* 영화 카드 & 추가 폼 */
+        .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; width: 85%; max-width: 1000px; padding-bottom: 50px; }
+        .movie-card { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: #2c2a24; position: relative; }
+        .movie-card img { width: 100%; height: 280px; object-fit: cover; border-radius: 10px; }
+        .movie-card .del-btn { position: absolute; top: 5px; right: 10px; color: #ccc; cursor: pointer; }
+        .add-btn-circle { width: 60px; height: 60px; background: #6B8E23; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; cursor: pointer; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+        .modal-content { background: #fff; padding: 20px; border-radius: 15px; width: 300px; color: #2c2a24; }
+        .modal-content input, .modal-content textarea { width: 100%; margin-bottom: 10px; padding: 8px; box-sizing: border-box; }
 
-        /* --- 방명록 스타일 --- */
-        #guestbook-form { width: 80%; max-width: 500px; margin-bottom: 20px; }
-        #guestbook-input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ccc; margin-bottom: 10px; }
-        #guestbook-list { width: 80%; max-width: 500px; text-align: left; color: #2c2a24; }
-        .guest-entry { background: #fff; padding: 10px; border-radius: 8px; margin-bottom: 10px; border-left: 5px solid #6B8E23; }
+        /* 방명록 */
+        #guestbook-list { width: 85%; max-width: 500px; }
+        .guest-entry { background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 10px; position: relative; color: #2c2a24; border-left: 5px solid #6B8E23; }
+        .guest-del { position: absolute; top: 10px; right: 10px; color: #e74c3c; cursor: pointer; font-size: 0.8rem; }
 
         /* 인트로 및 스크롤 */
-        #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #3d2b1f; display: flex; justify-content: center; align-items: center; z-index: 2000; cursor: pointer; flex-direction: column; }
-        #intro-screen h2 { color: #6B8E23; font-size: 2rem; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #3d2b1f; display: flex; justify-content: center; align-items: center; z-index: 3000; cursor: pointer; flex-direction: column; }
         #scroll-page { display: none; height: 250vh; text-align: center; padding-top: 20vh; }
-        .scroll-guide { color: #2c2a24; font-size: 3.5rem; font-weight: bold; transition: opacity 0.5s; }
+        .scroll-guide { color: #2c2a24; font-size: 3.5rem; font-weight: bold; }
     </style>
 </head>
 <body>
     <div id="intro-screen" onclick="startScrollPage()">
-        <h2>TAP IN</h2>
-        <p style="font-size: 1rem; color: #6B8E23;">ENJOY</p>
+        <h2 style="color:#6B8E23">TAP IN</h2>
+        <p style="color:#6B8E23">ENJOY</p>
     </div>
 
     <div id="scroll-page">
@@ -87,64 +75,54 @@
     </div>
 
     <div id="economy" class="content-section">
-        <h1>경제 & 뉴스</h1>
-        <div style="width:90%; height:400px;">
-            <iframe src="https://www.tradingview-widget.com/embed-widget/timeline/?locale=kr#%7B%22feedMode%22%3A%22all_symbols%22%2C%22colorTheme%22%3A%22light%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22100%25%22%7D" style="width: 100%; height: 100%; border: none; border-radius: 10px;"></iframe>
-        </div>
+        <h1>경제 뉴스</h1>
+        <iframe src="https://www.tradingview-widget.com/embed-widget/timeline/?locale=kr" style="width: 90%; height: 500px; border: none; border-radius: 15px;"></iframe>
         <span class="back-btn" onclick="showHome()">뒤로가기</span>
     </div>
 
     <div id="stocks" class="content-section">
-        <h1>실시간 주가 시세</h1>
-        <div style="width:90%; height:450px;">
-            <iframe src="https://www.tradingview-widget.com/embed-widget/market-overview/?locale=kr#%7B%22colorTheme%22%3A%22light%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22100%25%22%7D" style="width: 100%; height: 100%; border: none; border-radius: 10px;"></iframe>
-        </div>
+        <h1>실시간 주가</h1>
+        <iframe src="https://www.tradingview-widget.com/embed-widget/market-overview/?locale=kr" style="width: 90%; height: 500px; border: none; border-radius: 15px;"></iframe>
         <span class="back-btn" onclick="showHome()">뒤로가기</span>
     </div>
 
     <div id="music" class="content-section">
         <h1>My Playlist</h1>
-        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX8Ueb9C7V37A?utm_source=generator" width="80%" height="380" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+        <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX8Ueb9CidzhR?utm_source=generator" width="85%" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" style="border-radius:12px;"></iframe>
         <span class="back-btn" onclick="showHome()">뒤로가기</span>
     </div>
 
     <div id="movie" class="content-section">
-        <h1>최근 본 영화</h1>
-        <div class="movie-grid">
-            <div class="movie-card">
-                <img src="https://via.placeholder.com/150x220?text=Movie+1" alt="영화1">
-                <h3>인셉션</h3>
-                <div class="rating">★★★★★</div>
-                <p class="review">"꿈속의 꿈, 여전히 소름 돋는 명작"</p>
-            </div>
-            <div class="movie-card">
-                <img src="https://via.placeholder.com/150x220?text=Movie+2" alt="영화2">
-                <h3>인터스텔라</h3>
-                <div class="rating">★★★★☆</div>
-                <p class="review">"우주와 부성애의 완벽한 조화"</p>
-            </div>
-        </div>
+        <h1>태윤 시네마</h1>
+        <div class="add-btn-circle" onclick="toggleModal(true)">+</div>
+        <div class="movie-grid" id="movie-grid"></div>
         <span class="back-btn" onclick="showHome()">뒤로가기</span>
     </div>
 
     <div id="guestbook" class="content-section">
         <h1>방명록</h1>
-        <div id="guestbook-form">
-            <input type="text" id="guestbook-input" placeholder="메시지를 남겨주세요!">
-            <button onclick="addEntry()" style="width:100%; padding:10px; background:#6B8E23; color:white; border:none; border-radius:10px; cursor:pointer; font-weight:bold;">등록하기</button>
+        <div style="width:85%; max-width:500px; margin-bottom:20px;">
+            <input type="text" id="gb-input" placeholder="메시지를 입력하세요" style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc;">
+            <button onclick="addGuestbook()" style="width:100%; padding:12px; background:#6B8E23; color:white; border:none; border-radius:10px; margin-top:10px; font-weight:bold; cursor:pointer;">글 남기기</button>
         </div>
         <div id="guestbook-list"></div>
         <span class="back-btn" onclick="showHome()">뒤로가기</span>
     </div>
 
+    <div id="movie-modal" class="modal">
+        <div class="modal-content">
+            <h3>새 영화 추가</h3>
+            <input type="text" id="m-title" placeholder="영화 제목">
+            <input type="text" id="m-img" placeholder="포스터 이미지 URL">
+            <input type="text" id="m-rate" placeholder="별점 (예: ★★★★★)">
+            <textarea id="m-review" placeholder="한 줄 평"></textarea>
+            <button onclick="addMovie()" style="width:100%; background:#6B8E23; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer;">저장</button>
+            <button onclick="toggleModal(false)" style="width:100%; background:#ccc; border:none; padding:10px; border-radius:5px; margin-top:5px; cursor:pointer;">취소</button>
+        </div>
+    </div>
+
     <script>
-        // 배경색 보간
-        function interpolateColor(color1, color2, factor) {
-            const r1 = parseInt(color1.substring(1, 3), 16), g1 = parseInt(color1.substring(3, 5), 16), b1 = parseInt(color1.substring(5, 7), 16);
-            const r2 = parseInt(color2.substring(1, 3), 16), g2 = parseInt(color2.substring(3, 5), 16), b2 = parseInt(color2.substring(5, 7), 16);
-            const r = Math.round(r1 + factor * (r2 - r1)), g = Math.round(g1 + factor * (g2 - g1)), b = Math.round(b1 + factor * (b2 - b1));
-            return `rgb(${r}, ${g}, ${b})`;
-        }
+        const ADMIN_PW = "1234"; // 방명록 삭제용 암호
 
         function startScrollPage() {
             document.getElementById('intro-screen').style.display = 'none';
@@ -157,8 +135,13 @@
             if (scrollPage.style.display === 'block') {
                 const scrollHeight = document.body.scrollHeight - window.innerHeight;
                 const scrollPercent = (window.scrollY / scrollHeight);
-                document.body.style.backgroundColor = interpolateColor("#ece6cc", "#2f3a2e", Math.min(scrollPercent, 1));
                 
+                // 배경색 변경
+                const r = Math.round(236 + (47 - 236) * scrollPercent);
+                const g = Math.round(230 + (58 - 230) * scrollPercent);
+                const b = Math.round(204 + (46 - 204) * scrollPercent);
+                document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+
                 const main = document.getElementById('main-container');
                 const guide = document.getElementById('guide-text');
                 if (scrollPercent >= 0.4) {
@@ -177,7 +160,8 @@
             sections.forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.body.style.overflow = 'hidden';
-            if(id === 'guestbook') displayEntries();
+            if(id === 'movie') loadMovies();
+            if(id === 'guestbook') loadGuestbook();
         }
 
         function showHome() {
@@ -186,21 +170,80 @@
             document.body.style.overflow = 'auto';
         }
 
-        // 방명록 로직
-        function addEntry() {
-            const input = document.getElementById('guestbook-input');
-            if (!input.value) return;
-            const entries = JSON.parse(localStorage.getItem('guestbook') || '[]');
-            entries.unshift({ text: input.value, date: new Date().toLocaleString() });
-            localStorage.setItem('guestbook', JSON.stringify(entries));
-            input.value = '';
-            displayEntries();
+        /* --- 영화 로직 --- */
+        function toggleModal(show) { document.getElementById('movie-modal').style.display = show ? 'flex' : 'none'; }
+
+        function addMovie() {
+            const title = document.getElementById('m-title').value;
+            const img = document.getElementById('m-img').value || 'https://via.placeholder.com/200x300?text=No+Image';
+            const rate = document.getElementById('m-rate').value;
+            const review = document.getElementById('m-review').value;
+            
+            if(!title) return alert("제목을 입력하세요!");
+            const movies = JSON.parse(localStorage.getItem('my-movies') || '[]');
+            movies.unshift({ title, img, rate, review });
+            localStorage.setItem('my-movies', JSON.stringify(movies));
+            
+            toggleModal(false);
+            loadMovies();
+            // 폼 초기화
+            document.getElementById('m-title').value = ''; document.getElementById('m-img').value = '';
         }
 
-        function displayEntries() {
+        function loadMovies() {
+            const grid = document.getElementById('movie-grid');
+            const movies = JSON.parse(localStorage.getItem('my-movies') || '[]');
+            grid.innerHTML = movies.map((m, i) => `
+                <div class="movie-card">
+                    <span class="del-btn" onclick="delMovie(${i})">×</span>
+                    <img src="${m.img}" onerror="this.src='https://via.placeholder.com/200x300?text=Error'">
+                    <h3>${m.title}</h3>
+                    <div style="color:#f1c40f">${m.rate}</div>
+                    <p style="font-size:0.9rem; color:#555">${m.review}</p>
+                </div>
+            `).join('');
+        }
+
+        function delMovie(i) {
+            const movies = JSON.parse(localStorage.getItem('my-movies') || '[]');
+            movies.splice(i, 1);
+            localStorage.setItem('my-movies', JSON.stringify(movies));
+            loadMovies();
+        }
+
+        /* --- 방명록 로직 --- */
+        function addGuestbook() {
+            const input = document.getElementById('gb-input');
+            if(!input.value) return;
+            const entries = JSON.parse(localStorage.getItem('my-gb') || '[]');
+            entries.unshift({ text: input.value, date: new Date().toLocaleString() });
+            localStorage.setItem('my-gb', JSON.stringify(entries));
+            input.value = '';
+            loadGuestbook();
+        }
+
+        function loadGuestbook() {
             const list = document.getElementById('guestbook-list');
-            const entries = JSON.parse(localStorage.getItem('guestbook') || '[]');
-            list.innerHTML = entries.map(e => `<div class="guest-entry"><strong>익명</strong>: ${e.text}<br><small style="color:#888">${e.date}</small></div>`).join('');
+            const entries = JSON.parse(localStorage.getItem('my-gb') || '[]');
+            list.innerHTML = entries.map((e, i) => `
+                <div class="guest-entry">
+                    <span class="guest-del" onclick="delGuestbook(${i})">삭제</span>
+                    <strong>익명</strong>: ${e.text}<br>
+                    <small style="color:#999">${e.date}</small>
+                </div>
+            `).join('');
+        }
+
+        function delGuestbook(i) {
+            const pw = prompt("관리자 암호를 입력하세요.");
+            if(pw === ADMIN_PW) {
+                const entries = JSON.parse(localStorage.getItem('my-gb') || '[]');
+                entries.splice(i, 1);
+                localStorage.setItem('my-gb', JSON.stringify(entries));
+                loadGuestbook();
+            } else {
+                alert("암호가 틀렸습니다.");
+            }
         }
     </script>
 </body>
